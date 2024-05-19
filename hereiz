@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$#" -eq 0 ]; then
+    echo "Usage $0 --ask  'your question'"
+    exit 1
+fi
+
+python3 bot.py "$@"
