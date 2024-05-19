@@ -1,6 +1,6 @@
 import argparse
 import os
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI, HarmBlockThreshold, HarmCategory
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationSummaryBufferMemory, ConversationBufferWindowMemory
 from langchain.prompts.prompt import PromptTemplate
@@ -25,7 +25,10 @@ def main(api_key, template, input_text):
     conversation = ConversationChain(
         prompt=prompt_template,
         llm=llm, 
-        verbose=False
+        verbose=False,
+        safety_settings={
+            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+        },
     )
     
     response = conversation.predict(input=input_text)
