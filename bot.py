@@ -14,7 +14,13 @@ with open('template.txt', 'r') as template_file:
 
 def main(api_key, template, input_text):
 
-    llm = ChatGoogleGenerativeAI(google_api_key=api_key,model="gemini-pro",temperature=0.7)
+    llm = ChatGoogleGenerativeAI(google_api_key=api_key,
+                                 model="gemini-pro",
+                                 temperature=0.7,
+                                 safety_settings={
+                                    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+                                },
+                                )
     
     prompt_template = PromptTemplate(input_variables=["input"], template=template)
     
@@ -25,10 +31,7 @@ def main(api_key, template, input_text):
     conversation = ConversationChain(
         prompt=prompt_template,
         llm=llm, 
-        verbose=False,
-        safety_settings={
-            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-        },
+        verbose=True,
     )
     
     response = conversation.predict(input=input_text)
@@ -50,6 +53,16 @@ if __name__ == "__main__":
     else:
         response = main(os.getenv('API_KEY'), template, args.ask)
         print(Fore.CYAN + "Hereiz:")
-        print(Fore.CYAN + response)
+        print(Fore.CYAN + response + "\n")
+
+        print("-"*100)
+        print("for debug only : ")
+        print("\n\n")
+
+        print(template)
+        print("-"*100)
+        print(args.ask)
+        print("-"*100)
+        print(response)
     
 
