@@ -1,4 +1,4 @@
 **/__pycache__/
 *.py[cod]
 *\$py.class
-memory/memory_buffer.txt
+memory/memory_buffer
