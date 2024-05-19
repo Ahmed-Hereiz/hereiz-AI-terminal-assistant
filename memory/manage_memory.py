@@ -19,8 +19,3 @@ class MemoryManager:
         except FileNotFoundError:
             return 'File not found in the specified directory or location'
         
-
-
-if __name__ == '__main__':
-    memory_manage = MemoryManager('memory_buffer')
-    memory_manage.clear_memory()
