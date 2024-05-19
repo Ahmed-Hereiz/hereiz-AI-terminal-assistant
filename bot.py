@@ -1,18 +1,20 @@
 import argparse
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI, HarmBlockThreshold, HarmCategory
-from langchain.chains import ConversationChain
-from langchain.memory import ConversationSummaryBufferMemory, ConversationBufferWindowMemory
 from langchain.prompts.prompt import PromptTemplate
+from langchain.memory import ConversationSummaryMemory
 from colorama import Fore
-
+from memory.manage_memory import MemoryManager
+from langchain.chains import ConversationChain
 
 os.environ['API_KEY'] = "AIzaSyCNO3Gwe7Hi32-DDo0yEhzElrTe6fNlOE4"
 
 with open('template.txt', 'r') as template_file:
     template = template_file.read()
 
-def main(api_key, template, input_text):
+memory_manager = MemoryManager('memory/memory_buffer')
+
+def main(api_key, template, input_text, memory_buffer):
 
     llm = ChatGoogleGenerativeAI(google_api_key=api_key,
                                  model="gemini-pro",
@@ -22,21 +24,20 @@ def main(api_key, template, input_text):
                                 },
                                 )
     
-    prompt_template = PromptTemplate(input_variables=["input"], template=template)
-    
-    # memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=500)
+    prompt_template = PromptTemplate(input_variables=["history", "input"], template=template)
 
-    # memory = ConversationBufferWindowMemory(k=7)
+    memory = ConversationSummaryMemory(llm=llm, max_token_limit=1000,buffer=memory_buffer)
 
     conversation = ConversationChain(
         prompt=prompt_template,
         llm=llm, 
-        verbose=True,
+        verbose=False,
+        memory=memory
     )
     
     response = conversation.predict(input=input_text)
 
-    return response
+    return response, memory.buffer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Terminal Chatbot", allow_abbrev=False)
@@ -51,18 +52,11 @@ if __name__ == "__main__":
     if not args.ask:
         print("Usage: hereiz --ask 'your question'")
     else:
-        response = main(os.getenv('API_KEY'), template, args.ask)
+        buffer = memory_manager.load_memory()
+        response, new_buffer = main(os.getenv('API_KEY'), template, args.ask, buffer)
         print(Fore.CYAN + "Hereiz:")
         print(Fore.CYAN + response + "\n")
 
-        print("-"*100)
-        print("for debug only : ")
-        print("\n\n")
-
-        print(template)
-        print("-"*100)
-        print(args.ask)
-        print("-"*100)
-        print(response)
+        memory_manager.save_buffer(new_buffer)
     
 
