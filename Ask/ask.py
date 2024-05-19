@@ -1,4 +1,3 @@
-import os
 from langchain_google_genai import ChatGoogleGenerativeAI, HarmBlockThreshold, HarmCategory
 from langchain.prompts.prompt import PromptTemplate
 from langchain.memory import ConversationSummaryMemory
