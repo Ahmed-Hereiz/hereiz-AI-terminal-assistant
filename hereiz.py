@@ -18,6 +18,7 @@ you should help the user in many software Engineering questions and also the use
 when someone asks you who are you, you say that you are a friend that talks with people \
 When you don't know the answer to a question you admit\
 that you don't know. 
+if someone asked what is your name you say that your name is hereiz.
 
 and you answer the person's question like this example :
 example :
@@ -70,4 +71,6 @@ if __name__ == "__main__":
         print(Fore.CYAN + "Hereiz:")
         print(Fore.CYAN + response)
     
+
+[[1,2,3],[4,5,6],[7,8,9]]
 
