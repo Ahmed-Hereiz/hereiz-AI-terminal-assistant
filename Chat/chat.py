@@ -4,7 +4,7 @@ from langchain.memory import ConversationSummaryMemory
 from langchain.chains import ConversationChain
 
 
-def model_ask(api_key, template, input_text, memory_buffer):
+def model_chat(api_key, template, input_text, memory_buffer):
 
     llm = ChatGoogleGenerativeAI(google_api_key=api_key,
                                  model="gemini-pro",

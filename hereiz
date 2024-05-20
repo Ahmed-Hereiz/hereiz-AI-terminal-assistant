@@ -1,8 +1,112 @@
 #!/bin/bash
 
+usage() {
+    echo "Usage: $0 [OPTIONS]"
+    echo "Options:"
+    echo "  -h, --help                   Display this help message"
+    echo "  -a, --ask 'question'         Ask a question to the model"
+    echo "  -c, --chat 'question'        chat to the model"
+    echo "  --so, --searchopen 'query'   Perform an open search query"
+    echo "  -s, --search 'query'         Perform a search query"
+    echo "  --sso 'query'                Perform both open and search queries"
+}
+
 if [ "$#" -eq 0 ]; then
-    echo "Usage $0 --ask  'your question'"
+    usage
+    echo  echo "Usage: $0 [--ask|-a 'your question to model'] [--searchopen|--so 'your search query'] [--search|--s 'your search query'] [--sso 'your search query']"
     exit 1
+elif [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+    usage
+    exit 0
 fi
 
-python3 bot.py "$@"
+
+searchopen=false
+search=false
+sso=false
+ask=false
+chat=false
+input_text=""
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        --ask|-a)
+            ask=true
+            shift
+            input_text="$1"
+            ;;
+        --chat|-c)
+            chat=true
+            shift
+            input_text="$1"
+            ;;
+        --searchopen|-so)
+            searchopen=true
+            shift
+            input_text="$1"
+            ;;
+        --search|-s)
+            search=true
+            shift
+            input_text="$1"
+            ;;
+        -sso)
+            sso=true
+            shift
+            input_text="$1"
+            ;;
+        *)
+            echo "Unknown option: $key"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+
+if $chat; then
+    cd Chat/
+    python3 model_chat.py --chat "$input_text"
+    cd ..
+
+elif $searchopen; then
+    cd Search/
+    python3 model_search.py --searchopen "$input_text"
+
+    if [ -f tmp_link ]; then
+        link=$(cat tmp_link)
+        rm tmp_link
+
+        google-chrome "$link"
+
+    else
+        echo "Error: tmp_link file created by model_search was not created. Ensure the Python script ran successfully."
+        exit 1
+    fi
+    cd ..
+
+elif $search; then
+    cd Search/
+    python3 agent_search.py --search "$input_text"
+
+elif $sso; then
+    cd Search/
+    python3 model_search.py --searchopen "$input_text" 
+
+    if [ -f tmp_link ]; then
+        link=$(cat tmp_link)
+        rm tmp_link
+
+        google-chrome "$link"
+
+    else
+        echo "Error: tmp_link file created by model_search was not created. Ensure the Python script ran successfully."
+        exit 1
+    fi
+
+    echo "in summary : "
+
+    python3 agent_search.py --search "$input_text" 
+    cd ..
+fi

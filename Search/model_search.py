@@ -1,4 +1,3 @@
-import os
 import json
 import argparse
 from search_manage import SearchManager
@@ -38,7 +37,7 @@ if __name__ == "__main__":
         print(f"Ignoring unknown argument(s): {', '.join(unknown)}")
 
     if not args.searchopen:
-        print("Usage: hereiz --ask 'your question'")
+        print("Usage: hereiz --searchopen 'your question'")
 
     else:
         print(Fore.CYAN + "Hereiz:")
