@@ -3,7 +3,7 @@ import os
 from colorama import Fore
 
 from memory.manage_memory import MemoryManager
-from ask.ask import model_ask
+from Ask.ask import model_ask
 
 os.environ['API_KEY'] = "AIzaSyCNO3Gwe7Hi32-DDo0yEhzElrTe6fNlOE4"
 
