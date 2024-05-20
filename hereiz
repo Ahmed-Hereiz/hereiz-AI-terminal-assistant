@@ -64,8 +64,12 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
+if $ask; then
+    cd Ask/
+    python3 model_ask.py --ask "$input_text"
+    cd ..
 
-if $chat; then
+elif $chat; then
     cd Chat/
     python3 model_chat.py --chat "$input_text"
     cd ..
