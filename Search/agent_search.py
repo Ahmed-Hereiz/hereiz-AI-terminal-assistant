@@ -1,7 +1,7 @@
 import warnings
 from contextlib import contextmanager
 
-from manage_search import SearchManager
+from search_manage import SearchManager
 from search_bot import SearchBot
 
 with open('../templates/search_template.txt', 'r') as template_file:
@@ -21,7 +21,7 @@ with suppress_warnings():
 
     search_bot = SearchBot(api_key=api_key,template=template,tool_function=manage_search.integrated_search_and_summarize)
 
-    query = "tell me the latest development in AI"
+    query = "top-cited artificial intelligence papers with high impact factor"
 
     print(search_bot.extract_keywords(query=query))
 

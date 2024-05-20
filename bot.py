@@ -1,14 +1,18 @@
 import argparse
 import os
+import json
 from colorama import Fore
 
 from memory.manage_memory import MemoryManager
 from Ask.ask import model_ask
 
-os.environ['API_KEY'] = "AIzaSyCNO3Gwe7Hi32-DDo0yEhzElrTe6fNlOE4"
+with open('config.json', 'r') as f:
+    config = json.load(f)
 
 with open('templates/chat_template.txt', 'r') as template_file:
     template = template_file.read()
+
+os.environ['API_KEY'] = config['api_key']
 
 memory_manager = MemoryManager('memory/memory_buffer')
 
