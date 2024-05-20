@@ -1,9 +1,11 @@
 import warnings
 from contextlib import contextmanager
-from langchain_google_genai import ChatGoogleGenerativeAI, HarmBlockThreshold, HarmCategory
-from langchain.agents import initialize_agent, Tool
 
 from manage_search import SearchManager
+from search_bot import SearchBot
+
+with open('../templates/search_template.txt', 'r') as template_file:
+    template = template_file.read()
 
 @contextmanager
 def suppress_warnings():
@@ -17,29 +19,11 @@ with suppress_warnings():
 
     api_key = "AIzaSyCNO3Gwe7Hi32-DDo0yEhzElrTe6fNlOE4"
 
+    search_bot = SearchBot(api_key=api_key,template=template,tool_function=manage_search.integrated_search_and_summarize)
 
-    llm = ChatGoogleGenerativeAI(google_api_key=api_key,
-                                    model="gemini-pro",
-                                    temperature=0.7,
-                                    safety_settings={
-                                        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-                                    },
-                                    )
-       
+    query = "tell me the latest development in AI"
 
-    integrated_tool = Tool(
-        name="IntegratedSearchAndSummarize",
-        func=manage_search.integrated_search_and_summarize,
-        description="Perform a web search and summarize the top results, where I want from you to make the output in the form of points"
-    )
+    print(search_bot.extract_keywords(query=query))
 
-    agent = initialize_agent(
-        llm=llm,
-        tools=[integrated_tool],
-        agent_type="zero-shot-react-description",
-        verbose=False
-    )
+    print(search_bot.use_search_agent(query=query))
 
-    response = agent.run("who is elon musk")
-    #print(response['output'])
-    print(response)
