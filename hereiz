@@ -3,12 +3,16 @@
 usage() {
     echo "Usage: $0 [OPTIONS]"
     echo "Options:"
-    echo "  -h, --help                   Display this help message"
-    echo "  -a, --ask 'question'         Ask a question to the model"
-    echo "  -c, --chat 'question'        chat to the model"
-    echo "  --so, --searchopen 'query'   Perform an open search query"
-    echo "  -s, --search 'query'         Perform a search query"
-    echo "  --sso 'query'                Perform both open and search queries"
+    echo "  -h, --help                      Display this help message"
+    echo "  -a, --ask 'question'            Ask a question to the model"
+    echo "  -c, --chat 'question'           chat to the model"
+    echo "  -so, --searchopen 'query'       Perform an open search query"
+    echo "  -s, --search 'query'            Perform a search query"
+    echo "  -sso, 'query'                   Perform both open and search queries"
+    echo "  -t  'template_name'             Show txt inside a specific template file"
+    echo "  -tl                             Show list of templates found"
+    echo "  -memshow                        Show Chat model memory"
+    echo "  -memclr                         Clear Chat model memory"
 }
 
 if [ "$#" -eq 0 ]; then
@@ -26,6 +30,10 @@ search=false
 sso=false
 ask=false
 chat=false
+template_list=false
+template_show=false
+clear_memory=false
+show_memory=false
 input_text=""
 
 while [[ $# -gt 0 ]]; do
@@ -56,8 +64,26 @@ while [[ $# -gt 0 ]]; do
             shift
             input_text="$1"
             ;;
+        -t)
+            template_show=true
+            shift
+            input_text="$1"
+            ;;
+        -tl)
+            template_list=true
+            shift
+            ;;
+        -memshow)
+            show_memory=true
+            shift
+            ;;
+        -memclr)
+            clear_memory=true
+            shift
+            ;;
         *)
             echo "Unknown option: $key"
+            usage
             exit 1
             ;;
     esac
@@ -112,5 +138,41 @@ elif $sso; then
     echo "in summary : "
 
     python3 agent_search.py --search "$input_text" 
+    cd ..
+
+elif $template_show; then
+    cd templates/ 
+    if [[ -f "$input_text" ]]; then
+        cat "$input_text"
+    elif [[ -f "$input_text.txt" ]]; then
+        cat "$input_text.txt"
+    else
+        echo "No such template file: $input_text or $input_text.txt"
+        echo "Check all the templates you have by running hereiz -tl"
+        exit 1
+    fi
+    cd ..
+
+elif $template_list; then
+    cd templates/
+    ls 
+    cd ..
+
+elif $show_memory; then
+    cd memory/
+    if [ -f memory_buffer ]; then
+        echo "The model memory : "
+        cat memory_buffer
+        echo " "
+    else
+        echo "Something wrong there is no memory buffer file"
+        exit 1
+    fi
+    cd ..
+
+elif $clear_memory; then
+    cd memory/
+    rm memory_buffer
+    touch memory_buffer
     cd ..
 fi
