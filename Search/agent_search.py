@@ -6,6 +6,7 @@ from colorama import Fore
 
 from search_manage import SearchManager
 from search_bot import SearchBot
+from langchain_google_genai import HarmBlockThreshold, HarmCategory
 
 with open('../templates/search_template.txt', 'r') as template_file:
     template = template_file.read()
@@ -13,9 +14,12 @@ with open('../templates/search_template.txt', 'r') as template_file:
 with open('../config.json', 'r') as f:
     config = json.load(f)
 
-api_key = config['api_key']
-max_num_chars = config['max_num_chars_search_agent']
-num_top_results = config['num_top_results_search_agent']
+safety_settings = {
+    HarmCategory[category]: HarmBlockThreshold[threshold]
+    for category, threshold in config['safety_settings'].items()
+}
+
+
 
 @contextmanager
 def suppress_warnings():
@@ -27,9 +31,14 @@ def suppress_warnings():
 
 def search_answer(query):
 
-    manage_search = SearchManager(max_num_chars=max_num_chars,num_top_results=num_top_results)
+    manage_search = SearchManager(
+        max_num_chars=config['max_num_chars_search_agent'],
+        num_top_results=config['num_top_results_search_agent']
+        )
 
-    search_bot = SearchBot(api_key=api_key,template=template,tool_function=manage_search.integrated_search_and_summarize)
+    search_bot = SearchBot(config['api_key'],template,manage_search.integrated_search_and_summarize,
+                           config['model'],config['search_agent_temperature'],
+                           safety_settings)
 
     return search_bot.use_search_agent(query=query)
 

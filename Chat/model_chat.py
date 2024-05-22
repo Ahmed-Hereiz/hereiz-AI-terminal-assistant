@@ -3,6 +3,7 @@ import os
 import json
 from colorama import Fore
 import sys
+from langchain_google_genai import HarmBlockThreshold, HarmCategory
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -15,10 +16,12 @@ with open('../config.json', 'r') as f:
 with open('../templates/chat_template.txt', 'r') as template_file:
     template = template_file.read()
 
-os.environ['API_KEY'] = config['api_key']
-
 memory_manager = MemoryManager('../memory/memory_buffer')
 
+safety_settings = {
+    HarmCategory[category]: HarmBlockThreshold[threshold]
+    for category, threshold in config['safety_settings'].items()
+}
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Terminal Chatbot", allow_abbrev=False)
@@ -33,7 +36,9 @@ if __name__ == "__main__":
         print("Usage: hereiz --chat 'your question'")
     else:
         buffer = memory_manager.load_memory()
-        response, new_buffer = model_chat(os.getenv('API_KEY'), template, args.chat, buffer)
+        response, new_buffer = model_chat(config['api_key'], template, args.chat,buffer,
+                                          config['model'], config['chat_model_temperature'],
+                                          safety_settings)
         print(Fore.CYAN + "Hereiz:")
         print(Fore.CYAN + response + "\n")
 

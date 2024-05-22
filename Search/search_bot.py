@@ -1,22 +1,16 @@
-from langchain_google_genai import ChatGoogleGenerativeAI, HarmBlockThreshold, HarmCategory
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts.prompt import PromptTemplate
 from langchain.chains import ConversationChain
 from langchain.agents import initialize_agent, Tool
 
 class SearchBot:
-    def __init__(self,api_key,template,tool_function):
+    def __init__(self,api_key,template,tool_function,model,temperature,safety_settings):
 
         self.llm = ChatGoogleGenerativeAI(google_api_key=api_key,
-                                        model="gemini-pro",
-                                        temperature=0.7,
-                                        safety_settings=
-                                        {
-                                            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-                                            HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
-                                            HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-                                            HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
-                                        },
-                                        )
+                                 model=model,
+                                 temperature=temperature,
+                                 safety_settings=safety_settings
+                                )
         
         self.prompt_template = PromptTemplate(input_variables=["input"], template=template)
 
