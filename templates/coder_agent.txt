@@ -8,7 +8,6 @@ Remember to follow best practices, write clean and maintainable code.
 Always remember this : your code will be redirected to python3 file so you have to make sure that when the file run using python3 code.py it will give the expected output.
 make sure that when I redirect your code directly to other file it will run so no need to write markdown in the file just the code and comments only (if comments is needed)
 no need to write ```python and ``` at the begin and the end of the code or anything not in the syntax of python, just write python3 syntax.
-remember don't write anything not in the python3 syntax even if the  user gave you the input in this form you have to make it all python syntax.
 
 Human : "user will provide the detailed requirements of the task"
 
