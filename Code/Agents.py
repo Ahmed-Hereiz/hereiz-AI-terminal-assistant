@@ -20,17 +20,22 @@ class Agent:
 
         self.parser = parser
 
+    def _generate_stream(self, model_input, chain):
+
+        chunks = []
+
+        for chunk in chain.stream({"input":{model_input}}):
+            print(chunk, end='', flush=True)
+            chunks.append(chunk)
+
+        return ''.join(chunks)
+
 class Planner(Agent):
     def make_plan(self, user_input):
 
         chain = self.prompt_template | self.agent_llm | self.parser
-        chunks = []
-
-        for plan_chunk in chain.stream({"input":{user_input}}):
-            print(plan_chunk, end='', flush=True)
-            chunks.append(plan_chunk)
-
-        plan = ''.join(chunks)
+        
+        plan = self._generate_stream(user_input,chain)
 
         with open("tmp_plan", "w") as file:
             file.write(plan)
@@ -41,22 +46,17 @@ class Coder(Agent):
             plan = file.read()
 
         chain = self.prompt_template | self.agent_llm | self.parser
-        chunks = []
-
-        for code_chunk in chain.stream({"input":{plan}}):
-            print(code_chunk, end='', flush=True)
-            chunks.append(code_chunk)
-
-        code = ''.join(chunks)
+        
+        code = self._generate_stream(plan,chain)
 
         with open("code_file.py", "w") as file:
             file.write(code)
 
-        return code
-
 
 class FileRunner(Agent):
-    def run_file(self, code):
+    def run_file(self):
+        with open("code_file.py","r") as file:
+            code = file.read()
         
         chain = self.prompt_template | self.agent_llm | self.parser
         classsify = chain.invoke({
