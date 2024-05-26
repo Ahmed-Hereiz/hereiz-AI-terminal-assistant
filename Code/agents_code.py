@@ -2,8 +2,12 @@ import argparse
 import json
 from colorama import Fore
 from langchain_google_genai import HarmBlockThreshold, HarmCategory
+from langchain.prompts.prompt import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
 
-from Agents import Agent, Planner, Coder, FileRunner
+from Agents import Planner, Coder, FileRunner
+from Parsers import ParseOutFileRunner
+
 
 with open('../config.json', 'r') as f:
     config = json.load(f)
@@ -22,9 +26,20 @@ safety_settings = {
     for category, threshold in config['safety_settings'].items()
 }
 
-plan_agent = Planner(config['api_key'],plan_template,config['model'],config['planner_agent_temperature'],safety_settings)
-code_agent = Coder(config['api_key'],code_template,config['model'],config['coder_agent_temperature'],safety_settings)
-runner_agent = FileRunner(config['api_key'],filerunner_template,config['model'],config['coder_agent_temperature'],safety_settings)
+
+
+parser = JsonOutputParser(pydantic_object=ParseOutFileRunner)
+
+planner_template = PromptTemplate(input_variables=["input"], template=plan_template)
+coder_template = PromptTemplate(input_variables=["input"], template=code_template)
+filerunner_template = PromptTemplate(input_variables=["input"],
+                                     template=filerunner_template,
+                                     partial_variables={"format_instructions":parser.get_format_instructions()}
+                                     )
+
+plan_agent = Planner(config['api_key'],config['model'],config['planner_agent_temperature'],safety_settings,planner_template,StrOutputParser())
+code_agent = Coder(config['api_key'],config['model'],config['coder_agent_temperature'],safety_settings,coder_template,StrOutputParser())
+runner_agent = FileRunner(config['api_key'],config['model'],config['coder_agent_temperature'],safety_settings,filerunner_template,parser)
 
 user_input = """
 write pytorch code to train a neural net on image dir named as Images, it's sub dir contains 2 dirs one named cats and one named dogs
@@ -32,24 +47,9 @@ train a cnn on this data where the task is to make dataloaders to load from Imag
 then save the torch model.
 """
 
-# plan_agent.make_plan(user_input=user_input)
+plan_agent.make_plan(user_input=user_input)
 
-# code = code_agent.write_code()
+code = code_agent.write_code()
 
-code = """
-    import pandas as pd
-
-    def merge_dataframes(df1, df2):
-        merged_df = pd.merge(df1, df2, on='id')
-        return merged_df
-
-    data1 = {'id': [1, 2, 3], 'value': [10, 20, 30]}
-    data2 = {'id': [1, 2, 4], 'value': [100, 200, 400]}
-    df1 = pd.DataFrame(data1)
-    df2 = pd.DataFrame(data2)
-    result = merge_dataframes(df1, df2)
-    print(result)
-    """
-
-print(runner_agent.run_file(code=code))
+runner_agent.run_file(code=code)
 

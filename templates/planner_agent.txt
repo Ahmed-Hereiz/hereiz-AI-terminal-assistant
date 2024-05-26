@@ -65,6 +65,6 @@ Potential Challenges:
 
 Handling edge cases where one or both input lists are empty.
 Ensuring the function maintains optimal performance.
-{history}
+
 Human: {input}
 Response: 
