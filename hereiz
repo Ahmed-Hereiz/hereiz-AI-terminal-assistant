@@ -30,25 +30,25 @@ while [[ $# -gt 0 ]]; do
     case $key in
         --ask|-a)
             shift
-            ./Ask/run_ask "$1" || exit 1
+            ./Ask/run_ask.sh "$1" || exit 1
             ;;
         --chat|-c)
             shift
-            ./Chat/run_chat "$1" || exit 1
+            ./Chat/run_chat.sh "$1" || exit 1
             ;;
         --searchopen|-so|--search|-s|-sso)
             shift
-            ./Search/run_search "$key" "$1" || exit 1
+            ./Search/run_search.sh "$key" "$1" || exit 1
             ;;
         -t)
             shift
-            ./templates/manage_templates "$key" "$1" || exit 1
+            ./templates/manage_templates.sh "$key" "$1" || exit 1
             ;;
         -tl)
-            ./templates/manage_templates -tl || exit 1
+            ./templates/manage_templates.sh -tl || exit 1
             ;;
         -memshow| --memory_show | -memclr | --memory_clear)
-            ./memory/manage_memory "$key" || exit 1
+            ./memory/manage_memory.sh "$key" || exit 1
             ;;
         *)
             echo "Unknown option: $key"
