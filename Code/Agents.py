@@ -33,6 +33,24 @@ class Coder(Agent):
         with open("code_file.py", "w") as file:
             file.write(code)
 
+        print(code)
+
+        return code
+
+
+class FileRunner(Agent):
+    def run_file(self, code):
+        print("hello world this if FileRunner class")
+
+        formatted_input = self.prompt_template.format(input=code)
+
+        print("hello world this if FileRunner class")
+
+        print(formatted_input)
+
+        response = self.agent_llm.generate(formatted_input)
+        print(response)
+
 class Debuger(Agent):
     def debug_code(self):
         with open("code_file.py", "r") as file:

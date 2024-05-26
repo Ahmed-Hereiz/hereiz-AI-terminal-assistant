@@ -46,68 +46,6 @@ def merge_sorted_lists(list1, list2):
     merged_list.extend(list2[j:])
     return merged_list
 
-another example :
-
-Human: Create a Python class representing a binary search tree with methods for insertion, deletion, and search.
-Response:
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-class BinarySearchTree:
-    def __init__(self):
-        self.root = None
-
-    def insert(self, val):
-        self.root = self._insert(self.root, val)
-
-    def _insert(self, node, val):
-        if not node:
-            return TreeNode(val)
-        if val < node.val:
-            node.left = self._insert(node.left, val)
-        elif val > node.val:
-            node.right = self._insert(node.right, val)
-        return node
-
-    def delete(self, val):
-        self.root = self._delete(self.root, val)
-
-    def _delete(self, node, val):
-        if not node:
-            return None
-        if val < node.val:
-            node.left = self._delete(node.left, val)
-        elif val > node.val:
-            node.right = self._delete(node.right, val)
-        else:
-            if not node.left:
-                return node.right
-            if not node.right:
-                return node.left
-            temp = self._min_value_node(node.right)
-            node.val = temp.val
-            node.right = self._delete(node.right, temp.val)
-        return node
-
-    def _min_value_node(self, node):
-        current = node
-        while current.left:
-            current = current.left
-        return current
-
-    def search(self, val):
-        return self._search(self.root, val)
-
-    def _search(self, node, val):
-        if not node or node.val == val:
-            return node
-        if val < node.val:
-            return self._search(node.left, val)
-        return self._search(node.right, val)
 {history}
 Human: {input}
 Response:
