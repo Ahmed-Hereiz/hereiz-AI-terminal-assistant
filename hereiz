@@ -3,16 +3,17 @@
 usage() {
     echo "Usage: $0 [OPTIONS]"
     echo "Options:"
-    echo "  -h, --help                      Display this help message"
-    echo "  -a, --ask 'question'            Ask a question to the model"
-    echo "  -c, --chat 'question'           chat to the model"
-    echo "  -so, --searchopen 'query'       Perform an open search query"
-    echo "  -s, --search 'query'            Perform a search query"
-    echo "  -sso, 'query'                   Perform both open and search queries"
-    echo "  -t  'template_name'             Show txt inside a specific template file"
-    echo "  -tl                             Show list of templates found"
-    echo "  -memshow, --memory_show         Show Chat model memory"
-    echo "  -memclr, --memory_clear         Clear Chat model memory"
+    echo "  -h, --help                                 Display this help message"
+    echo "  -a, --ask 'question'                       Ask a question to the model"
+    echo "  -c, --chat 'question'                      chat to the model"
+    echo "  -so, --searchopen 'query'                  Perform an open search query"
+    echo "  -s, --search 'query'                       Perform a search query"
+    echo "  -sso, 'query'                              Perform both open and search queries"
+    echo "  -t  'template_name'                        Show txt inside a specific template file"
+    echo "  -tl                                        Show list of templates found"
+    echo "  -memshow, --memory_show 'memory_name'      Show Chat model memory"
+    echo "  -memclr, --memory_clear 'memory_name'      Clear Chat model memory"
+    echo "  -memlst, --memory_list                     show list of memory files found" 
 }
 
 if [ "$#" -eq 0 ]; then
