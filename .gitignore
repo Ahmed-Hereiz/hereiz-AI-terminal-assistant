@@ -2,3 +2,4 @@
 *.py[cod]
 *\$py.class
 memory/memory_buffer
+.venv/
