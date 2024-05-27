@@ -1,30 +1,20 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
-from colorama import Fore
+from utils import add_root_to_path
+from typing import Any
 
-class ModelAsk:
-    def __init__(self, api_key, model, temperature, safety_settings, prompt_template, parser):
-        self.initialize_agent(api_key, model, temperature, safety_settings, prompt_template, parser)
+hereiz_root = add_root_to_path()
+from fonts import CustomizeOutputTerminal
+from shared import ChainBasicModel 
 
-    def initialize_agent(self, api_key, model, temperature, safety_settings, prompt_template, parser):
+class ModelAsk(ChainBasicModel):
+    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any, prompt_template: Any, parser: Any):
 
-        self.llm = ChatGoogleGenerativeAI(
-            google_api_key=api_key,
-            model=model,
-            temperature=temperature,
-            safety_settings=safety_settings
-        )
+        super().__init__(api_key, model, temperature, safety_settings, prompt_template, parser)
 
-        self.prompt_template = prompt_template
+    def generate_stream(self, model_input):
 
-        self.parser = parser
-
-        self.chain = self.prompt_template | self.llm | self.parser
-
-    def _generate_stream(self, model_input):
-
-        print(Fore.CYAN+"Hereiz : ")
+        print(CustomizeOutputTerminal(hereiz_root).customize_output("Hereiz : "))
 
         for chunk in self.chain.stream({"input":{model_input}}):
             print(chunk, end='', flush=True)
  
-        print(Fore.WHITE,"\n")
+        CustomizeOutputTerminal(hereiz_root).reset_all()

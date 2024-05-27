@@ -2,9 +2,11 @@
 
 show_memory=false
 clear_memory=false
+list_memory=false
 
+input_text=""
 
-cd memory/
+cd data/history/
 
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -12,9 +14,15 @@ while [[ $# -gt 0 ]]; do
         -memshow| --memory_show)
             show_memory=true
             shift
+            input_text="$1"
             ;;
         -memclr| --memory_clear)
             clear_memory=true
+            shift
+            input_text="$1"
+            ;;
+        -memlst| --memory_list)
+            list_memory=true
             shift
             ;;
         *)
@@ -27,21 +35,31 @@ done
 
 
 if $show_memory; then
-    if [ -f memory_buffer ]; then
+    if [ -f "$input_text" ]; then
         echo "The model memory : "
-        cat memory_buffer
+        cat "$input_text"
         echo " "
     else
-        echo "Something wrong there is no memory buffer file"
+        echo "No such memory file: $input_text "
+        echo "Check all the memories you have by running hereiz -memlst"
         exit 1
     fi
 
 elif $clear_memory; then
-    rm -f memory_buffer
-    touch memory_buffer
+    if [ -f "$input_text" ]; then
+        rm "$input_text"
+        touch "$input_text"
+        echo "memroy cleared"
+    else
+        echo "No such memory file: $input_text "
+        echo "Check all the memories you have by running hereiz -memlst"
+        exit 1
+    fi
 
-echo "memroy cleared"
+elif $list_memory; then
+    ls
 
+    
 fi
 
-cd ..
+exit

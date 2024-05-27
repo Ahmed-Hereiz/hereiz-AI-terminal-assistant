@@ -1,57 +1,25 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
-from colorama import Fore
+from utils import add_root_to_path
+from typing import Any
 
-from langchain.prompts.prompt import PromptTemplate
-from langchain.memory import ConversationSummaryMemory
-from langchain.chains import ConversationChain
+hereiz_root = add_root_to_path()
+from fonts import CustomizeOutputTerminal
+from shared import ChainBasicModel 
 
-class ModelChat:
-    def __init__(self, api_key, model, temperature, safety_settings, prompt_template, parser, memory_buffer):
-        self.initialize_agent(api_key, model, temperature, safety_settings, prompt_template, parser, memory_buffer)
+class ModelChat(ChainBasicModel):
+    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any, prompt_template: Any, parser: Any):
 
-    def initialize_agent(self, api_key, model, temperature, safety_settings, prompt_template, parser, memory_buffer):
+        super().__init__(api_key, model, temperature, safety_settings, prompt_template, parser)
 
-        self.llm = ChatGoogleGenerativeAI(
-            google_api_key=api_key,
-            model=model,
-            temperature=temperature,
-            safety_settings=safety_settings
-        )
+    def generate_stream(self, model_input):
 
-        self.prompt_template = prompt_template
+        chunks = []
 
-        self.parser = parser
-
-        self.memory_buffer = memory_buffer
-
-        self.chain = self.prompt_template | self.llm | self.parser
-
-    def _generate_stream(self, model_input):
+        print(CustomizeOutputTerminal(hereiz_root).customize_output("Hereiz : "))
 
         for chunk in self.chain.stream({"input":{model_input}}):
             print(chunk, end='', flush=True)
- 
-        print(Fore.WHITE,"\n")
+            chunks.append(chunk)
 
-def model_chat(api_key, template, input_text, memory_buffer, model, temperature, safety_settings):
+        CustomizeOutputTerminal(hereiz_root).reset_all()
 
-    llm = ChatGoogleGenerativeAI(google_api_key=api_key,
-                                 model=model,
-                                 temperature=temperature,
-                                 safety_settings=safety_settings
-                                )
-    
-    prompt_template = PromptTemplate(input_variables=["history", "input"], template=template)
-
-    memory = ConversationSummaryMemory(llm=llm, max_token_limit=1000,buffer=memory_buffer)
-
-    conversation = ConversationChain(
-        prompt=prompt_template,
-        llm=llm, 
-        verbose=False,
-        memory=memory
-    )
-    
-    response = conversation.predict(input=input_text)
-
-    return response, memory.buffer
+        return ''.join(chunks)

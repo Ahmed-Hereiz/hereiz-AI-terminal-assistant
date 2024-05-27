@@ -34,7 +34,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --chat|-c)
             shift
-            ./Chat/run_chat.sh "$1" || exit 1
+            ./scripts/run_chat.sh "$1" || exit 1
             ;;
         --searchopen|-so|--search|-s|-sso)
             shift
@@ -42,13 +42,17 @@ while [[ $# -gt 0 ]]; do
             ;;
         -t)
             shift
-            ./templates/manage_templates.sh "$key" "$1" || exit 1
+            ./scripts/manage_templates.sh "$key" "$1" || exit 1
             ;;
         -tl)
-            ./templates/manage_templates.sh -tl || exit 1
+            ./scripts/manage_templates.sh -tl || exit 1
             ;;
         -memshow| --memory_show | -memclr | --memory_clear)
-            ./memory/manage_memory.sh "$key" || exit 1
+            shift
+            ./scripts/manage_memory.sh "$key" "$1" || exit 1
+            ;;
+        -memlst| --memory_list)
+            ./scripts/manage_memory.sh "$key" "$1" || exit 1
             ;;
         *)
             echo "Unknown option: $key"

@@ -44,4 +44,4 @@ elif $template_list; then
 
 fi
 
-cd ..
+exit

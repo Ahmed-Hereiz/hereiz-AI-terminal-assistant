@@ -3,3 +3,4 @@
 *\$py.class
 memory/memory_buffer
 .venv/
+*.pyc

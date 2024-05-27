@@ -1,15 +1,14 @@
 #!/bin/bash
 
 input_text="$1"
-script="model_chat.py"
 
-cd Chat/
+if [[ -z "$input_text" ]]; then
+    echo "Usage: ./hereiz -c 'your question here'"
+    exit 1
+fi
 
-if [[ -f "$script" ]]; then
-    python3 "$script" --chat "$input_text"
-else
-    echo "Error $script is not found."
-    exit
-fi 
+cd src/features/ || { echo "Error: Directory 'src/features/' not found."; exit 1; }
 
-cd ..
+python3 Chat/ -c "$input_text"
+
+exit

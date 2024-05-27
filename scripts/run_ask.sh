@@ -1,15 +1,14 @@
 #!/bin/bash
 
 input_text="$1"
-script="run_ask.py"
 
-cd features/Ask/
+if [[ -z "$input_text" ]]; then
+    echo "Usage: ./hereiz -a 'your question here'"
+    exit 1
+fi
 
-if [[ -f "$script" ]]; then
-    python3 "$script" --ask "$input_text"
-else
-    echo "Error $script is not found."
-    exit
-fi 
+cd src/features/ || { echo "Error: Directory 'src/features/' not found."; exit 1; }
 
-cd ..
+python3 Ask/ -a "$input_text"
+
+exit
