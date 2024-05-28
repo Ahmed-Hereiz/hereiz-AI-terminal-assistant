@@ -5,5 +5,5 @@ __all__ = [
     'ChainBasicModel',
     'BaseSummarizerModel',
     'MemorySummarizerModel',
-    'SearchSummerizeModel'
+    'SearchSummerizeModel',
 ]

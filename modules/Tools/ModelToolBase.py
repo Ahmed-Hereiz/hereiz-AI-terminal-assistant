@@ -65,8 +65,8 @@ class ToolBase:
         """
         method: Callable[..., Any] = getattr(self, method_name)
         result = method(*args, **kwargs)
-        function_params = {"args": args, "kwargs": kwargs}
-        log = self.log_method_call(method_name, function_params, method.__doc__ or "")
+        # function_params = {"args": args, "kwargs": kwargs}
+        log = self.log_method_call(method_name, args, method.__doc__ or "")
         return log
     
     

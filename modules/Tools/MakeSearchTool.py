@@ -1,7 +1,10 @@
+from utils import add_root_to_path
+hereiz_root = add_root_to_path()
+
 import requests
 from bs4 import BeautifulSoup # type: ignore
 from typing import List, Dict
-from ModelToolBase import ToolBase
+from modules.Tools.ModelToolBase import ToolBase
 
 class SearchManager(ToolBase):
     def __init__(self, max_num_chars: int = 2000, num_top_results: int = 3):

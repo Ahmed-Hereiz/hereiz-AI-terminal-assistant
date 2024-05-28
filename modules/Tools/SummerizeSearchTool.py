@@ -1,12 +1,13 @@
 from utils import add_root_to_path
-from ModelToolBase import ToolBase
-
 hereiz_root = add_root_to_path()
+
+from modules.Tools.ModelToolBase import ToolBase
 from modules.Models import SearchSummerizeModel
 from common.utils import load_config, parse_safety_settings
 
-config = load_config('../../config/llm.json')
+config = load_config(f'{hereiz_root}/config/llm.json')
 safety_settings = parse_safety_settings(config['safety_settings'])
+
 
 class SearchSummerizer(ToolBase):
     def __init__(self):
@@ -49,3 +50,4 @@ class SearchSummerizer(ToolBase):
 
         with open(history_file_path, 'a') as file:
             file.write(search_summary)
+
