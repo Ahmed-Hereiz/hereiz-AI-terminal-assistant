@@ -3,7 +3,7 @@ from typing import Any
 
 hereiz_root = add_root_to_path()
 from fonts import CustomizeOutputTerminal
-from shared import ChainBasicModel 
+from modules.Models import ChainBasicModel 
 
 class ModelAsk(ChainBasicModel):
     def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any, prompt_template: Any, parser: Any):

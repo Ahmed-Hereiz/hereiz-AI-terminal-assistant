@@ -1,7 +1,3 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.prompts.prompt import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-
 class MemoryManager:
     def __init__(self, memory_file):
         self.memory_file = memory_file

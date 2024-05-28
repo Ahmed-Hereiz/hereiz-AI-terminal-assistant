@@ -6,7 +6,7 @@ from model_chat import ModelChat
 hereiz_root = add_root_to_path()
 from common import MemoryManager, load_config, load_template, parse_safety_settings
 from helpers import replace_history_sentence
-from shared import MemorySummarizerModel
+from modules.Models import MemorySummarizerModel
 
 
 def hande_chat():
