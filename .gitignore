@@ -4,3 +4,4 @@
 memory/memory_buffer
 .venv/
 *.pyc
+config/llm.json
