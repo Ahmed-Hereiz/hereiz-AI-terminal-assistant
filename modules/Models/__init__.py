@@ -1,9 +1,11 @@
 from .ChainModel import ChainBasicModel
-from .SummerizeModel import BaseSummarizerModel, MemorySummarizerModel, SearchSummerizeModel
+from .SummarizeModel import BaseSummarizerModel, MemorySummarizerModel, SearchSummarizeModel
+from .base import BaseModel
 
 __all__ = [
     'ChainBasicModel',
     'BaseSummarizerModel',
     'MemorySummarizerModel',
-    'SearchSummerizeModel',
+    'SearchSummarizeModel',
+    'BaseModel',
 ]

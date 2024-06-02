@@ -1,4 +1,4 @@
 {
-    "max_num_chars_search_agent":2000,
-    "num_top_results_search_agent":1
+    "max_num_chars_search_agent":5000,
+    "num_top_results_search_agent":3
 }

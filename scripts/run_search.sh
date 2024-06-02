@@ -5,7 +5,9 @@ search=false
 sso=false
 input_text=""
 
-cd Search/
+cd src/features/ || { echo "Error: Directory 'src/features/' not found."; exit 1; }
+
+tmp_link=../../data/tmp/tmp_link
 
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -20,7 +22,7 @@ while [[ $# -gt 0 ]]; do
             shift
             input_text="$1"
             ;;
-        -sso)
+        --fullsearch|-sso)
             sso=true
             shift
             input_text="$1"
@@ -34,60 +36,35 @@ while [[ $# -gt 0 ]]; do
 done
 
 if $searchopen; then
-    script="model_search.py"
-    if [[ -f "$script" ]]; then
-        python3 "$script" --searchopen "$input_text"
-        if [[ -f tmp_link ]]; then
-            link=$(cat tmp_link)
-            rm tmp_link
-            google-chrome "$link"
-        else
-            echo "Error: tmp_link file created by $script was not created. Ensure the Python script ran successfully."
-            exit 1
-        fi
+    python3 Search/ -so "$input_text"
+    if [[ -f "$tmp_link" ]]; then
+        link=$(cat "$tmp_link")
+        rm "$tmp_link"
+        google-chrome "$link"
     else
-        echo "Error: $script not found."
+        echo "Error: tmp_link file was not created. Ensure the Python script ran successfully."
         exit 1
     fi
 
 elif $search; then
-    script="agent_search.py"
-    if [[ -f "$script" ]]; then
-        python3 "$script" --search "$input_text"
-    else
-        echo "Error: $script not found."
-        exit 1
-    fi
+    python3 Search/ -s "$input_text"
+    
 
 elif $sso; then
-    script_open="model_search.py"
-    script_search="agent_search.py"
-
-    if [[ -f "$script_open" ]]; then
-        python3 "$script_open" --searchopen "$input_text"
-        if [[ -f tmp_link ]]; then
-            link=$(cat tmp_link)
-            rm tmp_link
-            google-chrome "$link"
-        else
-            echo "Error: tmp_link file created by $script_open was not created. Ensure the Python script ran successfully."
-            exit 1
-        fi
-        echo "in summary:"
-        if [[ -f "$script_search" ]]; then
-            python3 "$script_search" --search "$input_text"
-        else
-            echo "Error: $script_search not found."
-            exit 1
-        fi
+    python3 Search/ -sso "$input_text"
+    if [[ -f "$tmp_link" ]]; then
+        link=$(cat "$tmp_link")
+        rm "$tmp_link"
+        google-chrome "$link"
     else
-        echo "Error: $script_open not found."
+        echo "Error: tmp_link file created by $script_open was not created. Ensure the Python script ran successfully."
         exit 1
     fi
+
 else
     echo "No valid option provided."
     usage
     exit 1
 fi
 
-cd ..
+exit

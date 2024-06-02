@@ -37,9 +37,9 @@ while [[ $# -gt 0 ]]; do
             shift
             ./scripts/run_chat.sh "$1" || exit 1
             ;;
-        --searchopen|-so|--search|-s|-sso)
+        --searchopen|-so|--search|-s|--fullsearch|-sso)
             shift
-            ./Search/run_search.sh "$key" "$1" || exit 1
+            ./scripts/run_search.sh "$key" "$1" || exit 1
             ;;
         -t)
             shift

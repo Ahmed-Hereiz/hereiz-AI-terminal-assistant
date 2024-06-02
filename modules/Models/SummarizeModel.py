@@ -118,10 +118,10 @@ class MemorySummarizerModel(BaseSummarizerModel):
         return new_buffer_memory
     
 
-class SearchSummerizeModel(BaseSummarizerModel):
+class SearchSummarizeModel(BaseSummarizerModel):
     def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any):
         """
-        Initializes the ModelAsk with the given parameters by calling the parent class constructor.
+        Initializes the SearchSummerizeModel with the given parameters by calling the parent class constructor.
 
         :param api_key: The API key for Google Generative AI.
         :param model: The model to use.
@@ -146,9 +146,9 @@ class SearchSummerizeModel(BaseSummarizerModel):
         super().__init__(api_key, model, temperature, safety_settings, prompt_template)
 
 
-    def summerize_search(self, input: str, description: str) -> str:
+    def summarize_search(self, input: str, description: str) -> str:
         """
-        summerize search results and returns the summerized search.
+        summarize search results and returns the summerized search.
 
         :param input: The new input to the model.
         :param description: user description for how to summerize.

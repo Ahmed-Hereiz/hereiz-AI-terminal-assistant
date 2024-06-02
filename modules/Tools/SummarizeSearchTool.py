@@ -2,20 +2,20 @@ from utils import add_root_to_path
 hereiz_root = add_root_to_path()
 
 from modules.Tools.ModelToolBase import ToolBase
-from modules.Models import SearchSummerizeModel
+from modules.Models import SearchSummarizeModel
 from common.utils import load_config, parse_safety_settings
 
 config = load_config(f'{hereiz_root}/config/llm.json')
 safety_settings = parse_safety_settings(config['safety_settings'])
 
 
-class SearchSummerizer(ToolBase):
+class SearchSummarizer(ToolBase):
     def __init__(self):
         """
-        Initializes the SearchSummerizer with the specified configuration and safety settings.
+        Initializes the SearchSummarizer with the specified configuration and safety settings.
         """
         super().__init__()
-        self._llm = SearchSummerizeModel(
+        self._llm = SearchSummarizeModel(
             config['api_key'],
             config['model'],
             config['search_model_temperature'],
@@ -31,11 +31,11 @@ class SearchSummerizer(ToolBase):
         :return: The generated summary.
         """
 
-        summary = self._llm.summerize_search(input=input,description=description)
+        summary = self._llm.summarize_search(input=input,description=description)
 
         return summary
     
-    def store_search_history(self, history_file_path: str, input: str, summary: str, source_title: str, source_link: str):
+    def store_search_history(self, history_file_path: str, input: str, summary: str, source_titles: str, source_links: str):
         """
         Stores the search history in a specified file.
 
@@ -46,7 +46,7 @@ class SearchSummerizer(ToolBase):
         :param source_link: The link to the source.
         """
 
-        search_summary = f"input:\n{input}\n\nBased on : {source_title} [{source_link}]\n summary:\n{summary}"
+        search_summary = f"input:\n{input}\n\nBased on : {source_titles} [{source_links}]\n summary:\n{summary}"
 
         with open(history_file_path, 'a') as file:
             file.write(search_summary)
