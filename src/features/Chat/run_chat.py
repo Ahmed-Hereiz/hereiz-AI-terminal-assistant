@@ -14,7 +14,7 @@ def hande_chat():
     template = load_template('../../templates/chat_template.txt')
     safety_settings = parse_safety_settings(config['safety_settings'])
 
-    manage_memory = MemoryManager('../../data/history/chat_memory_buffer')
+    manage_memory = MemoryManager('../../data/history/memory/chat_memory_buffer')
     memory_buffer = manage_memory.load_memory()
 
     template_with_history = replace_history_sentence(template,memory_buffer)

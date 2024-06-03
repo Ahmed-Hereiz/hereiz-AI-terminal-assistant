@@ -4,5 +4,4 @@
 .venv/
 *.pyc
 config/llm.json
-data/history/chat_memory_buffer
-data/history/search_history.txt
+data/history/*

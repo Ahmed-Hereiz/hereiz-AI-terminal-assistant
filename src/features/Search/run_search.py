@@ -11,7 +11,7 @@ from modules.Agents.SearchAgent import (
 def handle_search():
     json_root = f'{hereiz_root}/config/llm.json'
     template_root = f'{hereiz_root}/templates/search_template.txt'
-    search_history = f'{hereiz_root}/data/history/search_history.txt'
+    search_history = f'{hereiz_root}/data/history/search/search_history.txt'
 
     config = load_config(json_root)
     prompt = load_template(template_root)

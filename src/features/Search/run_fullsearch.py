@@ -12,7 +12,7 @@ from modules.Agents.SearchAgent import (
 def handle_fullsearch():
     json_root = f'{hereiz_root}/config/llm.json'
     template_root = f'{hereiz_root}/templates/search_template.txt'
-    search_history = f'{hereiz_root}/data/history/search_history.txt'
+    search_history = f'{hereiz_root}/data/history/search/search_history.txt'
     tmp_link_path = f'{hereiz_root}/data/tmp/tmp_link'
 
     config = load_config(json_root)
