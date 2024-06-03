@@ -1,7 +1,7 @@
 from utils import add_root_to_path
 hereiz_root = add_root_to_path()
 
-from modules.Tools.ModelToolBase import ToolBase
+from modules.Tools import ToolBase
 from modules.Models import SearchSummarizeModel
 from common.utils import load_config, parse_safety_settings
 

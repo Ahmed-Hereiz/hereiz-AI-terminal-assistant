@@ -10,3 +10,11 @@
 <h3>modules/Agents/SearchAgent</h3>
 
 > - make runtime more reusable
+
+<h3>modeules/Agents/CodeAgent</h3>
+
+> - still unstable version of it 
+
+<h3>modeules/Agents/ResumeAgent</h3>
+
+> - still unstable version of it 
