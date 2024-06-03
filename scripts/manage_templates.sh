@@ -1,3 +1,5 @@
+#!/bin/bash
+
 input_text=""
 
 cd src/managment/manage_templates/ || { echo "Error: Directory 'src/managment/manage_templates/' not found."; exit 1; }
@@ -20,3 +22,5 @@ while [[ $# -gt 0 ]]; do
     esac
     shift
 done
+
+exit

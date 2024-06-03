@@ -18,3 +18,5 @@ while [[ $# -gt 0 ]]; do
     esac
     shift
 done
+
+exit

@@ -20,6 +20,8 @@ usage() {
     echo "  -memlst, --memory_list                     show list of memory files found" 
     echo "  -searchshow, --search_show                 show the search history"
     echo "  -searchclr, --search_clear                 Clear the search history"
+    echo "  -viewlogs                                  View the log file"
+    echo "  -clrlogs                                   Clear the log file"
 }
 
 if [ "$#" -eq 0 ]; then
@@ -33,6 +35,8 @@ elif [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
 fi
 
 log "INFO" "Script started with options: $*"
+
+clrlogs_flag=0
 
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -74,6 +78,15 @@ while [[ $# -gt 0 ]]; do
             log "INFO" "Managing search with option: '$key'"
             ./scripts/manage_search.sh "$key" || { log "ERROR" "Failed to manage search with option: '$key'"; exit 1; }
             ;;
+        -viewlogs)
+            log "INFO" "Viewing logs"
+            ./scripts/manage_logs.sh "$key" || { log "ERROR" "Failed to view logs"; exit 1; }
+            ;;
+        -clrlogs)
+            log "INFO" "Clearing logs"
+            ./scripts/manage_logs.sh "$key" || { log "ERROR" "Failed to clear logs"; exit 1; }
+            clrlogs_flag=1
+            ;;
         *)
             log "ERROR" "Unknown option: '$key'"
             echo "Unknown option: $key"
@@ -84,6 +97,8 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-log "INFO" "Script execution completed"
+if [ $clrlogs_flag -eq 0 ]; then
+    log "INFO" "Script execution completed"
+fi
 
 exit 0
