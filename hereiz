@@ -1,5 +1,9 @@
 #!/bin/bash
 
+log() {
+    ./log.sh "$1" "$2"
+}
+
 usage() {
     echo "Usage: $0 [OPTIONS]"
     echo "Options:"
@@ -20,6 +24,7 @@ usage() {
 
 if [ "$#" -eq 0 ]; then
     usage
+    log "ERROR" "No options provided"
     echo  echo "Usage: $0 [--ask|-a 'your question to model'] [--searchopen|--so 'your search query'] [--search|--s 'your search query'] [--sso 'your search query']"
     exit 1
 elif [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
@@ -27,40 +32,50 @@ elif [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     exit 0
 fi
 
+log "INFO" "Script started with options: $*"
 
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
         --ask|-a)
             shift
-            ./scripts/run_ask.sh "$1" || exit 1
+            log "INFO" "Running ask with input: '$1'"
+            ./scripts/run_ask.sh "$1" || { log "ERROR" "Failed to run ask with input: '$1'"; exit 1; }
             ;;
         --chat|-c)
             shift
-            ./scripts/run_chat.sh "$1" || exit 1
+            log "INFO" "Running chat with input: '$1'"
+            ./scripts/run_chat.sh "$1" || { log "ERROR" "Failed to run chat with input: '$1'"; exit 1; }
             ;;
         --searchopen|-so|--search|-s|--fullsearch|-sso)
             shift
-            ./scripts/run_search.sh "$key" "$1" || exit 1
+            log "INFO" "Running search with option: '$key' and query: '$1'"
+            ./scripts/run_search.sh "$key" "$1" || { log "ERROR" "Failed to run search with option: '$key' and query: '$1'"; exit 1; }
             ;;
         -t)
             shift
-            ./scripts/manage_templates.sh "$key" "$1" || exit 1
+            log "INFO" "Managing templates with option: '$key' and template: '$1'"
+            ./scripts/manage_templates.sh "$key" "$1" || { log "ERROR" "Failed to manage templates with option: '$key' and template: '$1'"; exit 1; }
             ;;
         -tl)
-            ./scripts/manage_templates.sh -tl || exit 1
+            log "INFO" "Showing list of templates"
+            ./scripts/manage_templates.sh -tl || { log "ERROR" "Failed to show list of templates"; exit 1; }
             ;;
         -memshow| --memory_show | -memclr | --memory_clear)
             shift
-            ./scripts/manage_memory.sh "$key" "$1" || exit 1
+            log "INFO" "Managing memory with option: '$key' and memory: '$1'"
+            ./scripts/manage_memory.sh "$key" "$1" || { log "ERROR" "Failed to manage memory with option: '$key' and memory: '$1'"; exit 1; }
             ;;
         -memlst| --memory_list)
-            ./scripts/manage_memory.sh "$key" "$1" || exit 1
+            log "INFO" "Showing list of memory files"
+            ./scripts/manage_memory.sh "$key" "$1" || { log "ERROR" "Failed to show list of memory files"; exit 1; }
             ;;
         -searchshow| --search_show| -searchclr| --search_clear)
-            ./scripts/manage_search.sh "$key" || exit 1
+            log "INFO" "Managing search with option: '$key'"
+            ./scripts/manage_search.sh "$key" || { log "ERROR" "Failed to manage search with option: '$key'"; exit 1; }
             ;;
         *)
+            log "ERROR" "Unknown option: '$key'"
             echo "Unknown option: $key"
             usage
             exit 1
@@ -69,3 +84,6 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
+log "INFO" "Script execution completed"
+
+exit 0
