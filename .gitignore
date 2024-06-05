@@ -4,5 +4,3 @@
 .venv/
 *.pyc
 config/llm.json
-data/history/*
-logs/hereiz.logs
