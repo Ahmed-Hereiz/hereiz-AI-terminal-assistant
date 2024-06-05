@@ -1,7 +1,11 @@
 #!/bin/bash
 
 log() {
-    ./log.sh "$1" "$2"
+    local script_name=$(basename "$0")
+    local command_executed="$0 $*"
+    local exit_status=$?
+
+    ./log.sh "$1" "$2" "$script_name" "$exit_status"
 }
 
 usage() {
