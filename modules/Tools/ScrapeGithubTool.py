@@ -7,15 +7,13 @@ from modules.Tools import ToolBase
 
 
 class GithubAccountScraper(ToolBase):
-    def __init__(self, username):
-
-        self.username = username
-        self.page_url = f"https://github.com/{username}?tab=repositories"
-        self.page = requests.get(self.page_url)
-
+    def __init__(self):
+        pass
     
-    def get_all_repos(self):
-        src = self.page.text
+    def get_all_repos(self, username):
+        page_url = f"https://github.com/{username}?tab=repositories"
+        page = requests.get(page_url)
+        src = page.text
         soup = BeautifulSoup(src, "lxml")
         all_repos = []
         repos = soup.find_all("div", {"class": "col-10 col-lg-9 d-inline-block"})
@@ -47,3 +45,17 @@ class GithubAccountScraper(ToolBase):
                 f.write(f"### [{repo_name}]({repo_url})\n")
                 f.write(f"**Language:** {language}\n\n")
 
+    
+    def scrape_tool(self, username):
+        all_repos = self.get_all_repos(username=username)
+        md_content = "# Resume\n\n"
+        md_content += "## Projects\n"
+        for repo in all_repos:
+            repo_name = repo['name']
+            repo_url = repo['url']
+            language = repo['language']
+            
+            md_content += f"### [{repo_name}]({repo_url})\n"
+            md_content += f"**Language:** {language}\n\n"
+        
+        return md_content
