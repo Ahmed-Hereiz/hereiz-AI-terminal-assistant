@@ -48,47 +48,47 @@ while [[ $# -gt 0 ]]; do
         --ask|-a)
             shift
             log "INFO" "Running ask with input: '$1'"
-            ./scripts/run_ask.sh "$1" || { log "ERROR" "Failed to run ask with input: '$1'"; exit 1; }
+            bash ./scripts/run_ask.sh "$1" || { log "ERROR" "Failed to run ask with input: '$1'"; exit 1; }
             ;;
         --chat|-c)
             shift
             log "INFO" "Running chat with input: '$1'"
-            ./scripts/run_chat.sh "$1" || { log "ERROR" "Failed to run chat with input: '$1'"; exit 1; }
+            bash ./scripts/run_chat.sh "$1" || { log "ERROR" "Failed to run chat with input: '$1'"; exit 1; }
             ;;
         --searchopen|-so|--search|-s|--fullsearch|-sso)
             shift
             log "INFO" "Running search with option: '$key' and query: '$1'"
-            ./scripts/run_search.sh "$key" "$1" || { log "ERROR" "Failed to run search with option: '$key' and query: '$1'"; exit 1; }
+            bash ./scripts/run_search.sh "$key" "$1" || { log "ERROR" "Failed to run search with option: '$key' and query: '$1'"; exit 1; }
             ;;
         -t)
             shift
             log "INFO" "Managing templates with option: '$key' and template: '$1'"
-            ./scripts/manage_templates.sh "$key" "$1" || { log "ERROR" "Failed to manage templates with option: '$key' and template: '$1'"; exit 1; }
+            bash ./scripts/manage_templates.sh "$key" "$1" || { log "ERROR" "Failed to manage templates with option: '$key' and template: '$1'"; exit 1; }
             ;;
         -tl)
             log "INFO" "Showing list of templates"
-            ./scripts/manage_templates.sh -tl || { log "ERROR" "Failed to show list of templates"; exit 1; }
+            bash ./scripts/manage_templates.sh -tl || { log "ERROR" "Failed to show list of templates"; exit 1; }
             ;;
         -memshow| --memory_show | -memclr | --memory_clear)
             shift
             log "INFO" "Managing memory with option: '$key' and memory: '$1'"
-            ./scripts/manage_memory.sh "$key" "$1" || { log "ERROR" "Failed to manage memory with option: '$key' and memory: '$1'"; exit 1; }
+            bash ./scripts/manage_memory.sh "$key" "$1" || { log "ERROR" "Failed to manage memory with option: '$key' and memory: '$1'"; exit 1; }
             ;;
         -memlst| --memory_list)
             log "INFO" "Showing list of memory files"
-            ./scripts/manage_memory.sh "$key" "$1" || { log "ERROR" "Failed to show list of memory files"; exit 1; }
+            bash ./scripts/manage_memory.sh "$key" "$1" || { log "ERROR" "Failed to show list of memory files"; exit 1; }
             ;;
         -searchshow| --search_show| -searchclr| --search_clear)
             log "INFO" "Managing search with option: '$key'"
-            ./scripts/manage_search.sh "$key" || { log "ERROR" "Failed to manage search with option: '$key'"; exit 1; }
+            bash ./scripts/manage_search.sh "$key" || { log "ERROR" "Failed to manage search with option: '$key'"; exit 1; }
             ;;
         -viewlogs)
             log "INFO" "Viewing logs"
-            ./scripts/manage_logs.sh "$key" || { log "ERROR" "Failed to view logs"; exit 1; }
+            bash ./scripts/manage_logs.sh "$key" || { log "ERROR" "Failed to view logs"; exit 1; }
             ;;
         -clrlogs)
             log "INFO" "Clearing logs"
-            ./scripts/manage_logs.sh "$key" || { log "ERROR" "Failed to clear logs"; exit 1; }
+            bash ./scripts/manage_logs.sh "$key" || { log "ERROR" "Failed to clear logs"; exit 1; }
             clrlogs_flag=1
             ;;
         *)
