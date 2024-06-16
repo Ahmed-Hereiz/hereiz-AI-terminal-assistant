@@ -3,7 +3,16 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 
 class BaseAgent:
-    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any, parser: Any = StrOutputParser(), initialize_verbose: bool = False):
+    def __init__(
+            self,
+            api_key: str,
+            model: str,
+            temperature: float,
+            safety_settings: Any,
+            parser: Any = StrOutputParser(),
+            initialize_verbose: bool = False
+        ):
+        
         """
         Initializes the BaseAgent with the given parameters.
 
@@ -14,6 +23,7 @@ class BaseAgent:
         :param parser: The parser to process model outputs. Defaults to StrOutputParser.
         :param initialize_verbose: If True, displays warnings during initialization if there are issues.
         """
+
         self._api_key = api_key
         self._model = model
         self._temperature = temperature
@@ -32,6 +42,7 @@ class BaseAgent:
         :raises ValueError: If an unsupported model is specified.
         :return: The initialized LLM.
         """
+
         if self._model == "gemini-pro":
             return ChatGoogleGenerativeAI(
                 google_api_key=self._api_key,
@@ -51,6 +62,7 @@ class BaseAgent:
         :param initialize_verbose: If True, displays warnings during initialization.
         :return: The initialized chain, or None if initialization fails.
         """
+
         if self._llm is not None:
             try:
                 return self._llm | self._parser
@@ -70,6 +82,7 @@ class BaseAgent:
         :raises ValueError: If the agent chain is not initialized.
         :return: The generated response as a string.
         """
+
         if self._chain is None:
             raise ValueError("Agent chain is not initialized.")
         
@@ -88,6 +101,7 @@ class BaseAgent:
         :raises ValueError: If the LLM is not initialized.
         :return: The LLM's response as a string.
         """
+
         if self._llm is None:
             raise ValueError("LLM is not initialized.")
         return self._llm.invoke(input=input)
@@ -99,6 +113,7 @@ class BaseAgent:
 
         :return: A string representation of the instance.
         """
+
         llm_initialized = self._llm is not None
         chain_initialized = self._chain is not None
         return f"Model used: {self._model}, with temperature: {self._temperature}, llm_initialized: {llm_initialized}, chain_initialized: {chain_initialized}"
@@ -110,6 +125,7 @@ class BaseAgent:
 
         :return: A string representation of the instance.
         """
+
         llm_initialized = self._llm is not None
         chain_initialized = self._chain is not None
         return f"Model used: {self._model}, with temperature: {self._temperature}, llm_initialized: {llm_initialized}, chain_initialized: {chain_initialized}"
@@ -122,6 +138,7 @@ class BaseAgent:
 
         :return: The LLM instance.
         """
+
         return self._llm
 
 
@@ -132,6 +149,7 @@ class BaseAgent:
 
         :return: The parser instance.
         """
+
         return self._parser
 
 
@@ -142,6 +160,7 @@ class BaseAgent:
 
         :return: The chain instance.
         """
+
         return self._chain
     
 
@@ -150,6 +169,7 @@ class BaseAgent:
         """
         Returns a name if specified for the agent 
         """
+
         return self.agent_name
     
     @agent_name.setter
@@ -157,5 +177,6 @@ class BaseAgent:
         """
         setter for the agent to give it a name
         """
+
         self.agent_name = str(name)
 
