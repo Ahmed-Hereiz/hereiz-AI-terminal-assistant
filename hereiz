@@ -12,7 +12,7 @@ usage() {
     echo "Usage: $0 [OPTIONS]"
     echo "Options:"
     echo "  -h, --help                                 Display this help message"
-    echo "  -a, --ask 'question'                       Ask a question to the model"
+    echo "  -a, --ask 'question'                       Ask a question to the model (without memory) "
     echo "  -c, --chat 'question'                      chat to the model (has memory file)"
     echo "  -so, --searchopen 'query'                  Perform an open search which get links for search query"
     echo "  -s, --search 'query'                       Perform a search query which searches and summarize results"
