@@ -13,6 +13,7 @@ class HumanLoopRuntime(BaseRuntime):
     def loop(self, activate_loop=True) -> str:
         
         while activate_loop:
+            print(self.prompt.prompt)
             self.prompt.prompt += self.step()
 
             if activate_loop:
