@@ -2,7 +2,7 @@ from typing import Any
 
 
 class BasePrompt:
-    def __init__(self, prompt_string: str = "", placeholders: dict = {}):
+    def __init__(self, prompt_string: str = ""):
         """
         Initializes the BasePrompt with the given template file and prompt string.
 
@@ -10,7 +10,6 @@ class BasePrompt:
         """
 
         self.prompt_string = prompt_string
-        self.placeholders = placeholders
         self.prompt = self._generate_prompt()
 
 
@@ -20,10 +19,7 @@ class BasePrompt:
         but this needs to overwritten inside every inherited class for being customizable for the use case.
         """
 
-        for replace in self.placeholders.keys():
-            prompt = self.prompt_string.replace(replace,self.placeholders[replace])
-
-        return prompt
+        return self.prompt_string
 
 
     def __repr__(self) -> str:

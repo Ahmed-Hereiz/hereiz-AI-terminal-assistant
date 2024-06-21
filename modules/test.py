@@ -1,47 +1,31 @@
-from langchain_core.output_parsers import StrOutputParser
+from agent_llm import SimpleLLM, SimpleInvokeLLM, SimpleStreamLLM
+from agent_prompt import SimplePrompt, PlaceHoldersPrompt
+from agent_runtime import SimpleRuntime, BaseRuntime, HumanLoopRuntime
 from utils import add_root_to_path
-root = add_root_to_path()
 
-from common.utils import load_config, parse_safety_settings
-from base_llm import BaseLLM
-from base_tools import BaseTool
-from base_prompt import BasePrompt
-from base_runtime import BaseRuntime
+root_path = add_root_to_path()
+from common.utils import load_config, parse_safety_settings, load_template, load_memory_buffer
 
-config = load_config(f"{root}/config/llm.json")
+
+config = load_config(f"{root_path}/config/llm.json")
 safety_settings = parse_safety_settings(config['safety_settings'])
+prompt_string = load_template(f"{root_path}/templates/chat_template.txt")
+memory_string = load_memory_buffer(f"{root_path}/data/history/memory/chat_memory_buffer")
 
-llm = BaseLLM(config['api_key'],config['model'],0.7,safety_settings,initialize_verbose=True)
-tools = BaseTool({})
-prompt = BasePrompt(prompt_string="tell me 10 linux commands")
-agent = BaseRuntime(llm=llm,prompt=prompt,tools=tools)
+simple_llm = SimpleStreamLLM(
+    config['api_key'],
+    config['model'],
+    0.7,
+    safety_settings
+)
 
-r = agent.loop(n_steps=3)
 
-# prompt = """tell me 20 linux commands """
+placeholders = {
+        "{additional}":"### Instructions\n1. Output your response.\n2. Wait for human feedback.\n3. If feedback is given, revise your response based on the feedback and attempt the task again.",
+        "{history}":memory_string,
+        "{input}":"tell me 10 linux commands"
+    }
 
-# print(llm.llm_generate(input=prompt))
-# print(llm.parser)
-
-# def tool1(x):
-#     """returns 0 function"""
-#     x = 0
-#     return x
-
-# def tool2(x):
-#     """returns x squared"""
-#     x = x**2
-#     return x
-
-# tools = {"tool1":tool1,"tool2":tool2}
-# tool = BaseTool(tools)
-
-# print(tool.format_tool_instructions())
-
-# print(tool.execute_func("tool2",10))
-
-# prompt1 = BasePrompt(template_file='../templates/ask_template.txt',prompt_string="this is ahmed")
-# prompt2 = BasePrompt(template_file=None,prompt_string="wow let's add to prompts")
-
-# print(prompt1+prompt2)
-
+loop_prompt = PlaceHoldersPrompt(prompt_string=prompt_string,placeholders=placeholders)
+runtime = HumanLoopRuntime(llm=simple_llm,prompt=loop_prompt)
+runtime.loop()
