@@ -1,72 +1,76 @@
-from typing import Any, Dict, Callable
+from typing import Any, List
 
 
 class BaseTool:
-    def __init__(self, tools: Dict[str, Callable] = {}):
+    def __init__(self, description: str):
         """
-        Initializes the BaseTool with the given tools.
+        Base class for individual tools.
 
-        :param tools: A dictionary where keys are tool names and values are callable functions.
+        :param description: A description of the tool.
         """
-        self.tools = tools
-        self.tools_names = list(tools.keys())
-        self.tools_executes = list(tools.values())
+        self.description = description
+        self.tool_name = self.__class__.__name__
+
+    def execute_func(self, *params: Any) -> Any:
+        """
+        Method to be implemented by each tool. This method should define the tool's functionality.
+
+        :param params: Parameters to pass to the function.
+        :return: The result of the function execution.
+        """
+        raise NotImplementedError("Each tool must implement its own execute_func method.")
+
+
+class ToolKit:
+    def __init__(self, tools: List[BaseTool] = []):
+        """
+        Initializes the ToolKit with the given tools.
+
+        :param tools: A list of tool objects. Each tool must have 'execute_func', 'tool_name', and 'description'.
+        """
+        self.tools = {tool.tool_name: tool for tool in tools}
+        self.tool_names = [tool.tool_name for tool in tools]
+        self.tool_descriptions = {tool.tool_name: tool.description for tool in tools}
         self.tool_instructions = self._format_tool_instructions()
-
 
     def _format_tool_instructions(self) -> str:
         """
-        Formats the tool instructions into a string with function names and their docstrings.
+        Formats the tool instructions into a string with function names and their descriptions.
 
         :return: A formatted string with function names and descriptions.
         """
         instructions = ""
-        for name, func in self.tools.items():
-            instructions += f"({name}): {func.__doc__}\n"
+        for name, description in self.tool_descriptions.items():
+            instructions += f"({name}): {description}\n"
         return instructions
 
-
-    def execute_func(self, func_name: str, *params: Any) -> Any:
+    def execute_tool(self, tool_name: str, *params: Any) -> Any:
         """
-        Executes the given function with provided parameters.
+        Executes the specified tool's execute_func method with the given parameters.
 
-        :param func_name: The name of the function to execute.
-        :param params: Parameters to pass to the function.
-        :return: The result of the function execution.
-        :raises ValueError: If the function is not found in the tools.
+        :param tool_name: The name of the tool to execute.
+        :param params: Parameters to pass to the tool's execute_func method.
+        :return: The result of the tool's execute_func method.
+        :raises ValueError: If the tool is not found in the toolkit.
         """
-        if func_name in self.tools and callable(self.tools[func_name]):
-            return self.tools[func_name](*params)
+        if tool_name in self.tools:
+            tool = self.tools[tool_name]
+            return tool.execute_func(*params)
         else:
-            raise ValueError(f"Function '{func_name}' is not found or is not callable.")
-
-
-    def clean_docstring(self, docstring: str) -> str:
-        """
-        Cleans a docstring by removing leading/trailing whitespace and extra spaces.
-
-        :param docstring: The docstring to clean.
-        :return: The cleaned docstring.
-        """
-        if not docstring:
-            return ""
-        lines = [line.strip() for line in docstring.strip().split('\n')]
-        return ' '.join(line for line in lines if line)
-
+            raise ValueError(f"Tool '{tool_name}' is not found in the toolkit.")
 
     def __repr__(self) -> str:
         """
-        Returns a string representation of the BaseTool instance.
+        Returns a string representation of the ToolKit instance.
 
-        :return: A string representation of the BaseTool instance.
+        :return: A string representation of the ToolKit instance.
         """
-        return f"BaseTool(tools={self.tools})"
-
+        return f"ToolKit(tools={self.tool_names})"
 
     def __str__(self) -> str:
         """
-        Returns a user-friendly string representation of the BaseTool instance.
+        Returns a user-friendly string representation of the ToolKit instance.
 
-        :return: A string representation of the BaseTool instance.
+        :return: A string representation of the ToolKit instance.
         """
-        return f"BaseTool with tools: {self.tools_names}"
+        return f"ToolKit with tools: {self.tool_names}"
