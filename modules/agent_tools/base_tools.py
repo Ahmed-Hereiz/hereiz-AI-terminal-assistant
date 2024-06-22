@@ -2,14 +2,15 @@ from typing import Any, List
 
 
 class BaseTool:
-    def __init__(self, description: str):
+    def __init__(self, description: str, tool_name: str = None):
         """
         Base class for individual tools.
 
+        :param tool_name: name for the tool to be excuted in runtime with.
         :param description: A description of the tool.
         """
         self.description = description
-        self.tool_name = self.__class__.__name__
+        self.tool_name = self.__class__.__name__ if tool_name is None else tool_name
 
     def execute_func(self, *params: Any) -> Any:
         """
@@ -18,7 +19,7 @@ class BaseTool:
         :param params: Parameters to pass to the function.
         :return: The result of the function execution.
         """
-        raise NotImplementedError("Each tool must implement its own execute_func method.")
+        raise NotImplementedError(f"Each tool must implement its own execute_func method.\n used params {params}")
 
 
 class ToolKit:
