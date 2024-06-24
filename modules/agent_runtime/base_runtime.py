@@ -37,7 +37,6 @@ class BaseRuntime:
         """
         for _ in range(n_steps):
             response = self.step()
-            print(response)
             self.prompt.prompt += f"\n{response}"
 
         return response
