@@ -1,6 +1,3 @@
-from typing import Any
-
-
 class BasePrompt:
     def __init__(self, prompt_string: str = ""):
         """
