@@ -2,7 +2,7 @@ from typing import Any
 
 
 class BaseRuntime:
-    def __init__(self, llm: Any, prompt: Any, tools: Any):
+    def __init__(self, llm: Any, prompt: Any, toolkit: Any):
         """
         Initializes the BaseRuntime with the given LLM, prompt, and tools.
 
@@ -12,7 +12,7 @@ class BaseRuntime:
         """
         self.llm = llm
         self.prompt = prompt
-        self.tools = tools
+        self.toolkit = toolkit
 
 
     def step(self) -> str:

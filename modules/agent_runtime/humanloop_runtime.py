@@ -4,7 +4,7 @@ from agent_runtime import BaseRuntime
 
 class HumanLoopRuntime(BaseRuntime):
     def __init__(self, llm: Any, prompt: Any):
-        super().__init__(llm=llm, prompt=prompt, tools=[])
+        super().__init__(llm=llm, prompt=prompt, toolkit=[])
 
 
     def step(self) -> str:
