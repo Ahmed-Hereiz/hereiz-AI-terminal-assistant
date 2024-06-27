@@ -1,6 +1,7 @@
 from agent_llm import SimpleLLM, SimpleInvokeLLM, SimpleStreamLLM
 from agent_prompt import SimplePrompt, PlaceHoldersPrompt
 from agent_runtime import SimpleRuntime, BaseRuntime, HumanLoopRuntime
+from agent_tools import ToolKit, SearchTool
 from utils import add_root_to_path
 
 root_path = add_root_to_path()
@@ -27,5 +28,7 @@ placeholders = {
     }
 
 loop_prompt = PlaceHoldersPrompt(prompt_string=prompt_string,placeholders=placeholders)
-runtime = HumanLoopRuntime(llm=simple_llm,prompt=loop_prompt)
+tool = SearchTool(description="search tool",tool_name="tool1")
+toolkit = ToolKit(tools=[tool])
+runtime = BaseRuntime(llm=simple_llm,prompt=loop_prompt,tools=toolkit)
 runtime.loop()
