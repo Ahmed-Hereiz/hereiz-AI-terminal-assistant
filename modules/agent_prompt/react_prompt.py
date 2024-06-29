@@ -1,14 +1,15 @@
-from agent_prompt import PlaceHoldersPrompt
+from typing import Any
+from agent_prompt import BasePrompt
 
 
-class ReActPrompt(PlaceHoldersPrompt):
-    def __init__(self, tools_and_roles: str, example_workflow: str, final_output: str, placeholders: dict = {}, prompt_string: str = ""):
+class ReActPrompt(BasePrompt):
+    def __init__(self, tools_and_roles: str, example_workflow: str, final_output: str, prompt_string: str = ""):
         
         self.tools_and_roles = tools_and_roles
         self.example_workflow = example_workflow
         self.final_output = final_output
 
-        super().__init__(placeholders, prompt_string)
+        super().__init__(prompt_string)
 
 
     def _generate_prompt(self):
@@ -48,14 +49,14 @@ You then output:
 
 
 
-class ReActPromptModified(PlaceHoldersPrompt):
-    def __init__(self, tools_and_roles: str, example_workflow: str, final_output: str, placeholders: dict = {}, prompt_string: str = ""):
+class ReActPromptModified(BasePrompt):
+    def __init__(self, toolkit: Any, example_workflow: str, final_output: str, prompt_string: str = ""):
         
-        self.tools_and_roles = tools_and_roles
+        self.toolkit = toolkit
         self.example_workflow = example_workflow
         self.final_output = final_output
 
-        super().__init__(placeholders, prompt_string)
+        super().__init__(prompt_string)
 
 
     def _generate_prompt(self):
