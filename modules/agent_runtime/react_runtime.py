@@ -35,29 +35,3 @@ class ReActRuntime(BaseRuntime):
 
         return agent_response
 
-
-    def _extract_json_from_string(self, text: str):
-
-        json_objects = []
-        brace_stack = []
-        json_str = ""
-        inside_json = False
-
-        for _, char in enumerate(text):
-            if char == '{':
-                brace_stack.append(char)
-                inside_json = True
-            if inside_json:
-                json_str += char
-            if char == '}':
-                brace_stack.pop()
-                if not brace_stack:
-                    inside_json = False
-                    try:
-                        json_object = json.loads(json_str)
-                        json_objects.append(json_object)
-                    except json.JSONDecodeError:
-                        pass
-                    json_str = ""
-
-        return json_objects
