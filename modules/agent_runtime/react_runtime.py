@@ -1,5 +1,4 @@
-import json
-from typing import Any
+from typing import Any, Dict
 from agent_runtime import BaseRuntime
 
 
@@ -10,7 +9,8 @@ class ReActRuntime(BaseRuntime):
 
 
     def step(self) -> str:
-        return super().step()
+        response = super().step()
+        return self._parse_response(response=response)
     
     def loop(self, agent_max_steps: int = 5) -> str:
 
@@ -34,4 +34,20 @@ class ReActRuntime(BaseRuntime):
                 break
 
         return agent_response
+    
+
+    def _parse_response(self, response: str) -> Dict[str, str]:
+        parsed = {}
+        current_key = None
+        for line in response.split('\n'):
+            if ':' in line:
+                key, value = line.split(':', 1)
+                key = key.strip()
+                value = value.strip()
+                if key in ['Thought', 'Action', 'Action Input', 'Observation', 'Final Answer']:
+                    current_key = key
+                    parsed[current_key] = value
+            elif current_key:
+                parsed[current_key] += ' ' + line.strip()
+        return parsed
 
