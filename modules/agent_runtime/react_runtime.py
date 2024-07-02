@@ -18,22 +18,17 @@ class ReActRuntime(BaseRuntime):
 
             agent_response = self.step()
             print(agent_response)
-            self.prompt.prompt += f"\n{agent_response}"
-            extracted_json_response = self._extract_json_from_string(text=agent_response)
 
-            if len(extracted_json_response) > 0:
-                function_name = extracted_json_response[0]['function_name']
-                function_params = extracted_json_response[0]['function_params']
-                if function_name not in self.toolkit.tool_names:
-                    raise Exception(f"Unknown action: {function_name}")
+            if agent_response['Action'].lower() == 'finish':
+                return agent_response['Final Answer']
+            
+            if agent_response['Action'] not in self.toolkit.tool_names:
+                raise Exception(f"Unknown action: {agent_response['Action']}")
+            
+            tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
+            self.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
 
-                tool_result = self.toolkit.execute_tool(function_params.values())
-                result = f"\nAction_Response: {tool_result}"
-                self.prompt.prompt += result
-            else:
-                break
-
-        return agent_response
+        return "Max iterations reached without finding an answer."
     
 
     def _parse_response(self, response: str) -> Dict[str, str]:
