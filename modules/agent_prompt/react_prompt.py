@@ -2,9 +2,10 @@ from agent_prompt import BasePrompt
     
 
 class ReActPrompt(BasePrompt):
-    def __init__(self, example_workflow: str = "", prompt_string: str = ""):
+    def __init__(self, question: str,  example_workflow: str = "", prompt_string: str = ""):
         
         self.example_workflow = example_workflow
+        self.question = question
 
         super().__init__(prompt_string)
 
@@ -30,10 +31,11 @@ Final Answer: the final answer to the original input question
 
 Begin!
 
-Question: 
+Question: {question}
 """
 
         react_prompt.replace("{example_workflow}",self.example_workflow)
         react_prompt.replace("{prompt_string}",self.prompt_string)
+        react_prompt.replace("{question}",self.question)
 
         return react_prompt
