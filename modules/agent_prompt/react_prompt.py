@@ -9,6 +9,8 @@ class ReActPrompt(BasePrompt):
 
         super().__init__(prompt_string)
 
+        self.prompt = self._generate_prompt()
+
 
     def _generate_prompt(self):
 
@@ -22,10 +24,13 @@ Question: the input question you must answer
 Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
 Action Input: the input to the action Make sure to return these parameters as python list
-Observation: the result of the action
+Observation: the result of the action (NOTE THAT in the first observation loop you don't give Observation you just output : 'waiting to use tool if available')
 ... (this Thought/Action/Action Input/Observation can repeat N times)
 Thought: I now know the final answer
+Action: finish
 Final Answer: the final answer to the original input question
+
+YOU MUST GO THROUGH ALL OF THESE STEPS IN ORDER. DO NOT SKIP ANY STEPS.
 
 {example_workflow}
 
@@ -34,8 +39,8 @@ Begin!
 Question: {question}
 """
 
-        react_prompt.replace("{example_workflow}",self.example_workflow)
-        react_prompt.replace("{prompt_string}",self.prompt_string)
-        react_prompt.replace("{question}",self.question)
+        react_prompt = react_prompt.replace("{example_workflow}",self.example_workflow)
+        react_prompt = react_prompt.replace("{prompt_string}",self.prompt_string)
+        react_prompt = react_prompt.replace("{question}",self.question)
 
         return react_prompt
