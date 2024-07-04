@@ -9,7 +9,7 @@ class BaseLLM:
             api_key: str,
             model: str,
             temperature: float,
-            safety_settings: Any,
+            safety_settings: Any = None,
             parser: Any = StrOutputParser(),
             initialize_verbose: bool = False
         ):

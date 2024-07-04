@@ -3,7 +3,7 @@ from langchain_core.output_parsers import StrOutputParser
 from agent_llm import BaseLLM
 
 class SimpleLLM(BaseLLM):
-    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any):
+    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any = None):
         """Uses default BaseLLM generate method"""
 
         parser = StrOutputParser()
@@ -14,7 +14,7 @@ class SimpleLLM(BaseLLM):
 
 
 class SimpleInvokeLLM(SimpleLLM):
-    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any):
+    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any = None):
         super().__init__(api_key, model, temperature, safety_settings)
 
 
@@ -25,7 +25,7 @@ class SimpleInvokeLLM(SimpleLLM):
 
 
 class SimpleStreamLLM(SimpleLLM):
-    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any):
+    def __init__(self, api_key: str, model: str, temperature: float, safety_settings: Any = None):
         super().__init__(api_key, model, temperature, safety_settings)
 
 
