@@ -14,33 +14,26 @@ class ReActRuntime(BaseRuntime):
     
     def loop(self, agent_max_steps: int = 5) -> str:
 
+        
         self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",*self.toolkit.tool_names)
         self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}",self.toolkit.tool_instructions)
+        
 
         for _ in range(agent_max_steps):
 
+            print("\n")
             agent_response = self.step()
-            print("-"*100)
-            print(self.prompt.prompt)
-
-            print("-"*100)
-            print(agent_response)
-            print("-"*100)
 
             if agent_response['Action'].lower() == 'finish':
                 final_answer = agent_response['Final Answer']
-                print(final_answer)
+                print("\n")
                 return final_answer
             
             if agent_response['Action'] not in self.toolkit.tool_names:
                 raise Exception(f"Unknown action: {agent_response['Action']}")
  
             tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
-            print("*"*100)
-            print(tool_result)
-            print("*"*100)
-            self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
-            print(self.prompt.prompt)
+            self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result[0]['content']}"
 
         return "Max iterations reached without finding an answer."
     
