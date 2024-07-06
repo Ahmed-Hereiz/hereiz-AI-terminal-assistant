@@ -40,12 +40,18 @@ simple_llm = SimpleStreamLLM(
     safety_settings
 )
 
+critic_llm = SimpleStreamLLM(
+    config['api_key'],
+    config['model'],
+    0.7,
+    safety_settings
+)
+
 agent1_prompt = SimplePrompt(prompt_string=prompt1)
 agent2_prompt = PlaceHoldersPrompt(prompt_string=prompt2,placeholders={"{prompt1}":prompt1})
 
 agent1 = SimpleRuntime(llm=simple_llm,prompt=agent1_prompt)
-agent2 = SimpleRuntime(llm=simple_llm,prompt=agent2_prompt)
+agent2 = HumanLoopRuntime(llm=critic_llm,prompt=agent2_prompt)
 
 agent_env = ReflectionEnv(agents=[agent1,agent2])
 agent_env.run(num_max_iters=5)
-
