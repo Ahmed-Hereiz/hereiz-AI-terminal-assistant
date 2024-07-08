@@ -11,7 +11,10 @@ class BaseEnv:
     def run(self):
         """modify this in every class you create that inherit from BaseEnv"""
         for agent in self.agents:
-            print(f"{agent}")
+            print(f"agent in the agents list : {agent}")
+
+        raise NotImplementedError(f"Need to implement the run method first to specify how the env will work")
+        
 
     def __str__(self) -> str:
         return f"agents in this env is {self.agents}"
