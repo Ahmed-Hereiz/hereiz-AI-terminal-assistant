@@ -33,39 +33,29 @@ AI model :
 """
 
 
-# simple_llm = SimpleStreamLLM(
-#     config['api_key'],
-#     config['model'],
-#     0.7,
-#     safety_settings
-# )
+simple_llm = SimpleStreamLLM(
+    config['api_key'],
+    config['model'],
+    0.7,
+    safety_settings
+)
 
-# critic_llm = SimpleStreamLLM(
-#     config['api_key'],
-#     config['model'],
-#     0.7,
-#     safety_settings
-# )
+critic_llm = SimpleStreamLLM(
+    config['api_key'],
+    config['model'],
+    0.7,
+    safety_settings
+)
 
-# agent1_prompt = SimplePrompt(prompt_string=prompt1)
-# agent2_prompt = PlaceHoldersPrompt(prompt_string=prompt2,placeholders={"{prompt1}":prompt1})
-
-# agent1 = SimpleRuntime(llm=simple_llm,prompt=agent1_prompt)
-# agent2 = HumanLoopRuntime(llm=critic_llm,prompt=agent2_prompt)
-
-# agent_env = ReflectionEnv(agents=[agent1,agent2])
-# agent_env.run(num_max_iters=5)
+agent1_prompt = SimplePrompt(prompt_string=prompt1)
+agent2_prompt = PlaceHoldersPrompt(prompt_string=prompt2,placeholders={"{prompt1}":prompt1})
 
 
-test_py_tool = """
-for i in range(100):
-    for j in range(11):
-        print("hello world")
+agent1 = SimpleRuntime(llm=simple_llm,prompt=agent1_prompt)
+agent2 = HumanLoopRuntime(llm=critic_llm,prompt=agent2_prompt)
 
-print("finished")
+agent_env = ReflectionEnv(agents=[agent1,agent2])
+agent_env.run(num_max_iters=5)
 
-"""
 
-tool1 = PythonRuntimeTool(description="python exec tool",tool_name="py")
-print(tool1.execute_func(code=test_py_tool))
       
