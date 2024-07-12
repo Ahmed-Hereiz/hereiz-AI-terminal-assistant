@@ -11,3 +11,11 @@ class BaseRouter:
         time.sleep(self.exec_after)
 
         return "router executed !"
+    
+    def __str__(self) -> str:
+        
+        return f"router will execute after {self.exec_after}"
+    
+    def __str__(self) -> str:
+        
+        return f"router will execute after {self.exec_after}"
