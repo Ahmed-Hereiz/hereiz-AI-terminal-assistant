@@ -2,7 +2,7 @@ from typing import Any
 from agent_routers import BaseRouter
 
 
-class InterruptRouter(BaseRouter):
+class ConditionalRouter(BaseRouter):
     def __init__(self, condition: Any, perform: Any, exec_after: float = 0):
         super().__init__(exec_after)
 
