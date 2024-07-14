@@ -11,6 +11,12 @@ class ConditionalRouter(BaseRouter):
 
 
     def exec_router(self, check_on):
+        """
+        It's prefered to use this router as base and make other routers that inherit from it.
+        use it to make more routers that checks some conditions like type, size, etc...
+        """
 
         if check_on == self.condition:
             return self.perform
+        
+
