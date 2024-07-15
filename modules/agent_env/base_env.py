@@ -1,10 +1,12 @@
-from typing import List, TypeVar, Any
+from typing import List, Union, Any
 from agent_runtime import BaseRuntime
+from agent_routers import BaseRouter
 
-T = TypeVar('T', bound=BaseRuntime)
+AgentType = Union[BaseRuntime, BaseRouter]
+
 
 class BaseEnv:
-    def __init__(self, agents: List[T]):
+    def __init__(self, agents: List[AgentType]):
 
         self.agents = agents
 
