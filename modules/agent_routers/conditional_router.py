@@ -20,3 +20,12 @@ class ConditionalRouter(BaseRouter):
             return self.perform
         
 
+class TypeConditionalRouter(ConditionalRouter):
+    def __init__(self, condition_type: Any, condition: Any, perform: Any, exec_after: float = 0):
+        super().__init__(type(condition), perform, exec_after)
+
+        self.condition_type = condition_type
+
+
+    def exec_router(self, check_on):
+        return super().exec_router(self.condition_type)
