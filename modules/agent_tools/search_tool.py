@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup # type: ignore
 from typing import Any
-from agent_tools import ScrapeLinkTool
+from modules.agent_tools import ScrapeLinkTool
 
 
 class SearchTool(ScrapeLinkTool):

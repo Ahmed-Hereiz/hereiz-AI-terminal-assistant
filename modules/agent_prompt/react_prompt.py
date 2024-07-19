@@ -1,4 +1,4 @@
-from agent_prompt import BasePrompt
+from modules.agent_prompt import BasePrompt
     
 
 class ReActPrompt(BasePrompt):

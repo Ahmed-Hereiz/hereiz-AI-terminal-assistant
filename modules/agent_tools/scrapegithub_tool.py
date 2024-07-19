@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup # type: ignore
 from typing import Any
-from agent_tools import BaseTool
+from modules.agent_tools import BaseTool
 
 
 class GithubAccScrapeTool(BaseTool):

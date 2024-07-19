@@ -2,7 +2,7 @@ from agent_llm import SimpleLLM, SimpleInvokeLLM, SimpleStreamLLM
 from agent_prompt import SimplePrompt, PlaceHoldersPrompt, ReActPrompt
 from agent_runtime import SimpleRuntime, BaseRuntime, HumanLoopRuntime, ReActRuntime
 from agent_tools import ToolKit, SearchTool, LinkedinProfileScrapeTool, PythonRuntimeTool
-from agent_env import ReflectionEnv, SequentialEnv
+#from agent_env import ReflectionEnv, SequentialEnv
 from utils import add_root_to_path
 
 root_path = add_root_to_path()
@@ -54,8 +54,8 @@ agent2_prompt = PlaceHoldersPrompt(prompt_string=prompt2,placeholders={"{prompt1
 agent1 = SimpleRuntime(llm=simple_llm,prompt=agent1_prompt)
 agent2 = HumanLoopRuntime(llm=critic_llm,prompt=agent2_prompt)
 
-agent_env = ReflectionEnv(agents=[agent1,agent2])
-agent_env.run(num_max_iters=5)
+# agent_env = ReflectionEnv(agents=[agent1,agent2])
+# agent_env.run(num_max_iters=5)
 
 
       

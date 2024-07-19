@@ -1,5 +1,5 @@
 from typing import List
-from agent_env import BaseEnv
+from modules.agent_env import BaseEnv
 
 class ReflectionEnv(BaseEnv):
     def __init__(self, agents):
