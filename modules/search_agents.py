@@ -58,7 +58,6 @@ Final Answer: the product of 22 * 33 is 726 [if there is more to describe to mak
         super().__init__(question, example_workflow=example_workflow, prompt_string=prompt_string)
         
 
-
 class SearchAgent(ReActRuntime):
     def __init__(self, llm, prompt):
 
