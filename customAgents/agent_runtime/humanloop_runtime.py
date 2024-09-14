@@ -13,18 +13,20 @@ class HumanLoopRuntime(BaseRuntime):
     
     def loop(self, activate_loop=True) -> str:
         
-        while activate_loop:
+        if activate_loop:
+            while activate_loop:
+                agent_response = self.step()
+                self.prompt.prompt += agent_response
 
+                if activate_loop:
+                    human_feedback = input("\n\nEnter feedback (or 'exit' to end loop): ")
+
+                    if human_feedback.lower() == 'exit':
+                        activate_loop = False
+                    else:
+                        self.prompt.prompt += f"\n\n### Feedback\n{human_feedback}\n"
+        else:
             agent_response = self.step()
-            self.prompt.prompt += agent_response
-
-            if activate_loop:
-                human_feedback = input("\n\nEnter feedback (or 'exit' to end loop): ")
-
-                if human_feedback.lower() == 'exit':
-                    activate_loop = False
-                else:
-                    self.prompt.prompt += f"\n\n### Feedback\n{human_feedback}\n"
 
         return agent_response
 

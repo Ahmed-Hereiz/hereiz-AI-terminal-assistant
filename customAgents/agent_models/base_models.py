@@ -1,4 +1,4 @@
-from type_utils import agent_models_type
+from customAgents.agent_models.type_utils import agent_models_type
 ## This is still dummy implementation for the BaseModels.. will be updated later !!
 
 

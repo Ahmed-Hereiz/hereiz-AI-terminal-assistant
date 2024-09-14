@@ -13,5 +13,7 @@ Example:
 Human: How can I install updates in Ubuntu?
 Hereiz: You can install updates in Ubuntu by using the following command in the terminal: sudo apt update && sudo apt upgrade. This command will first update the list of available packages and their versions, then upgrade any installed packages to their latest versions.
 
+(Now your turn start from here)
+
 Human: {input}
 Hereiz:
