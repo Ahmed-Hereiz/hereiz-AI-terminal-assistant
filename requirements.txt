@@ -12,3 +12,5 @@ beautifulsoup4
 bs4
 lxml
 PyPDF2
+pillow
+opencv-python
