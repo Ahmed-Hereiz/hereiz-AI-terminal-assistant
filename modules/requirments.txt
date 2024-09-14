@@ -1,2 +1,0 @@
-langchain
-langchain_google_genai
