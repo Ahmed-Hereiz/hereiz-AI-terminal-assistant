@@ -17,19 +17,9 @@ def get_arguments_search():
 
     return args
 
-def get_arguments_searchopen():
-    parser = argparse.ArgumentParser(description="Terminal Search Model", allow_abbrev=True)
-    parser.add_argument("--searchopen", "-so", type=str, help="Your query to search for with AI")
-    args, unknown = parser.parse_known_args()
-
-    if unknown:
-        print(f"Ignoring unknown argument(s): {', '.join(unknown)}")
-
-    return args
-
 def get_arguments_fullsearch():
-    parser = argparse.ArgumentParser(description="Terminal Search Model", allow_abbrev=True)
-    parser.add_argument("--fullsearch", "-sso", type=str, help="Your query to search for with AI")
+    parser = argparse.ArgumentParser(description="Terminal Search across multi scraped content", allow_abbrev=True)
+    parser.add_argument("--fullsearch", "-fs", type=str, help="Your query to search for with AI")
     args, unknown = parser.parse_known_args()
 
     if unknown:
