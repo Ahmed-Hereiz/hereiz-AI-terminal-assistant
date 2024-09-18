@@ -14,3 +14,4 @@ lxml
 PyPDF2
 pillow
 opencv-python
+gradio_client
