@@ -1,15 +1,16 @@
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import ReActPrompt
 from customAgents.agent_runtime import ReActRuntime
-from customAgents.agent_models import GradioClientModels
 from customAgents.agent_tools import (
     ToolKit,
     SearchTool,
     PythonRuntimeTool,
     ScrapeDynamicLinkTool,
-    ModelInferenceTool
+    ModelInferenceTool,
+    PDFDocReaderTool
 )
 
+from modules.generate_agents import txt2imgModel, sketch2imgModel
 
 class MainLLM(BaseLLM):
     def __init__(self, api_key: str, model: str, temperature: float, safety_settings=None):
@@ -140,13 +141,18 @@ Question: {question}
 class MainAgent(ReActRuntime):
     def __init__(self, llm, prompt):
 
+        txt2imge_model = txt2imgModel(saved_imgs_dir="output/Imgs",gradio_client_id="mukaist/DALLE-4k")
+        sketch2img_model = sketch2imgModel(saved_imgs_dir="output/sketches")
+
         search_tool = SearchTool(description="tool that can search internet (each query you input will get different search) Note that it accepts only one param",tool_name="search_tool")
         python_tool = PythonRuntimeTool(description="tool that can run python code (give the code for this function as md format)",tool_name="python_tool")
-        scrape_tool = ScrapeDynamicLinkTool(description="tool used to scrape provided links and get content (Note while passing the link make sure the link is correct and it takes one param at the time and in form of plain link text without '' or list) if you got the content don't use it again (Please notice after you use this tool and get results from it no need to use it again with same link in 2 consecutive iterations)",tool_name="scrape_tool")
-        image_generation_tool = ModelInferenceTool(description="tool used to use text to image model (take input as single text prompt without list or '' in between) Note once the tool finish generation you will get message of where the output is found you have to tell the user the where the output dir is and stop also if you didn't get any output from the tool confirming it genrated rerun the tool some times if still no output clarify that there is problem with the tool",tool_name="image_generation_tool",model=GradioClientModels("mukaist/DALLE-4k"))
-        toolkit = ToolKit(tools=[search_tool,python_tool,scrape_tool,image_generation_tool])
+        scrape_tool = ScrapeDynamicLinkTool(description="tool used to scrape provided links and get content (Note while passing the link make sure the link is correct and it takes one param at the time and in form of plain link text without '' or list) if you got the content don't use it again (Please notice after you use this tool and get results make sure you read the results well from it, no need to use it again with same link in 2 consecutive iterations) make sure to input the link as it is without adding spaces to it",tool_name="scrape_tool",max_num_chars=10000)
+        readpdf_tool = PDFDocReaderTool(description="tool used to read text inside a pdf documment, input param is single unquoted pdf path not found in list just plain text",tool_name="readpdf_tool")
+        img2txt_tool = ModelInferenceTool(description="tool used to use text to image model (take input as single text prompt without list or '' in between) Note once the tool finish generation you will get message of where the output is found you have to tell the user the where the output dir is and stop also if you didn't get any output from the tool confirming it genrated rerun the tool some times if still no output clarify that there is problem with the tool",tool_name="image_to_text_tool",model=txt2imge_model)
+        sketch2img_tool = ModelInferenceTool(description="This tool is designed to convert a user's sketch and prompt into a refined image. (if you found in the prompt that the user want to draw or make sketch activate it) When the user expresses the intent to create a sketch, the tool will take a single input: a clear and detailed text prompt describing the desired modifications or enhancements to the sketch. The prompt should be provided as plain text (not using quotes or an input list). Once the image generation is complete, the tool will return the directory where the final image, refined from the user's sketch, is saved.",tool_name="sketch_to_image_tool",model=sketch2img_model)
+        toolkit = ToolKit(tools=[search_tool,python_tool,scrape_tool,readpdf_tool,img2txt_tool,sketch2img_tool])
 
         super().__init__(llm, prompt, toolkit=toolkit)
 
     def loop(self, agent_max_steps: int = 10) -> str:
-        return super().loop(agent_max_steps)
+        return super().loop(agent_max_steps, verbose_tools=True)
