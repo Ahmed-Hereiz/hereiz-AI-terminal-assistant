@@ -1,7 +1,6 @@
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import BasePrompt
 from customAgents.agent_runtime import BaseRuntime
-from customAgents.agent_env import BaseEnv
 
 
 class ChatLLM(BaseLLM):
@@ -9,7 +8,7 @@ class ChatLLM(BaseLLM):
         super().__init__(api_key, model, temperature, safety_settings)
 
     def llm_generate(self, input: str) -> str:
-        return super().generate_response(input)
+        return super().generate_response(input, output_style="cyan")
 
 
 class ChatPrompt(BasePrompt):

@@ -8,7 +8,7 @@ class AskLLM(BaseLLM):
         super().__init__(api_key, model, temperature, safety_settings)
 
     def llm_generate(self, input: str) -> str:
-        return super().generate_response(input)
+        return super().generate_response(input, output_style="cyan")
 
 
 class AskPrompt(BasePrompt):
