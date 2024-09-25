@@ -16,9 +16,9 @@ usage() {
     echo "  -a, --ask 'question'                       Ask a question to the model (without memory) "
     echo "  -aH --ask-with-humanfeedback 'question'    Ask a question to the model with feedback loop with the human "
     echo "  -c, --chat 'question'                      chat to the model (has memory file)"
-    echo "  -so, --searchopen 'query'                  Perform an open search which get links for search query"
     echo "  -s, --search 'query'                       Perform a search query which searches and summarize results"
-    echo "  -sso, --fullsearch  'query'                Perform both open and search queries"
+    echo "  -fs, --fullsearch 'query'                  Perform a full search where it scrapes many links at same time "
+    echo "  -G,  --generate                            used to generate content using generative AI models "
     echo "  -t  'template_name'                        Show txt inside a specific template file 'template_name'"
     echo "  -tl                                        Show list of templates found"
     echo "  -memshow, --memory_show 'memory_name'      Show Chat model memory"
@@ -49,7 +49,7 @@ while [[ $# -gt 0 ]]; do
     case $key in
         --main|-m)
             shift
-            log "INFO" "Running ask with input: '$1'"
+            log "INFO" "Running main with input: '$1'"
             bash ./scripts/run_main.sh "$1" || { log "ERROR" "Failed to run ask with input: '$1'"; exit 1; }
             ;;
         --ask|-a)
@@ -76,6 +76,16 @@ while [[ $# -gt 0 ]]; do
             shift
             log "INFO" "Running search with option: '$key' and query: '$1'"
             bash ./scripts/run_search.sh "$key" "$1" || { log "ERROR" "Failed to run search with option: '$key' and query: '$1'"; exit 1; }
+            ;;
+        -G|--generate)
+            shift
+            log "INFO" "Running generate with option: '$key' and query: '$1'"
+            bash ./scripts/run_generate.sh "$1" || { log "ERROR" "Failed to run search with option: '$key' and query: '$1'"; exit 1; }
+            ;;
+        --screen|-w)
+            shift
+            log "INFO" "Running generate with option: '$key' and query: '$1'"
+            bash ./scripts/run_screen.sh "$1" || { log "ERROR" "Failed to run search with option: '$key' and query: '$1'"; exit 1; }
             ;;
         -t)
             shift
