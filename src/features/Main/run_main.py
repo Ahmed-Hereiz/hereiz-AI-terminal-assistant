@@ -1,3 +1,4 @@
+from colorama import Fore, Style
 from utils import get_arguments, add_root_to_path
 
 root_dir = add_root_to_path()
@@ -30,4 +31,4 @@ def handle_main():
 
     manage_memory.save_buffer(new_memory)
 
-    print(chat_response)
+    print(Fore.CYAN + chat_response + Style.RESET_ALL)
