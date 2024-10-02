@@ -1,6 +1,7 @@
 #!/bin/bash
 
 log_file="logs/hereiz.logs"
+max_lines=200  
 
 log() {
     local log_level="$1"
@@ -9,6 +10,8 @@ log() {
     local exit_status="$4"
 
     echo "$(date +"%Y-%m-%d %H:%M:%S") [SCRIPT: $script_name] [$log_level] - $log_message | Exit Status: $exit_status" >> "$log_file"
+    
+    tail -n "$max_lines" "$log_file" > "$log_file.tmp" && mv "$log_file.tmp" "$log_file"
 }
 
 if [ "$#" -lt 3 ]; then
@@ -16,4 +19,4 @@ if [ "$#" -lt 3 ]; then
     exit 1
 fi
 
-log "$1" "$2" "$3" "$4" 
+log "$1" "$2" "$3" "$4"
