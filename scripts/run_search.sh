@@ -1,8 +1,7 @@
 #!/bin/bash
 
-searchopen=false
 search=false
-sso=false
+fs=false
 input_text=""
 
 cd src/features/ || { echo "Error: Directory 'src/features/' not found."; exit 1; }
@@ -12,17 +11,12 @@ tmp_link=../../data/tmp/tmp_link
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
-        --searchopen|-so)
-            searchopen=true
-            shift
-            input_text="$1"
-            ;;
         --search|-s)
             search=true
             shift
             input_text="$1"
             ;;
-        --fullsearch|-sso)
+        --fullsearch|-fs)
             sso=true
             shift
             input_text="$1"
