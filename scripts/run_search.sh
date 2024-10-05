@@ -29,23 +29,12 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-if $searchopen; then
-    python3 Search/ -so "$input_text"
-    if [[ -f "$tmp_link" ]]; then
-        link=$(cat "$tmp_link")
-        rm "$tmp_link"
-        google-chrome "$link"
-    else
-        echo "Error: tmp_link file was not created. Ensure the Python script ran successfully."
-        exit 1
-    fi
-
-elif $search; then
+if $search; then
     python3 Search/ -s "$input_text"
     
 
-elif $sso; then
-    python3 Search/ -sso "$input_text"
+elif $fs; then
+    python3 Search/ -fs "$input_text"
     if [[ -f "$tmp_link" ]]; then
         link=$(cat "$tmp_link")
         rm "$tmp_link"
