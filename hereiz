@@ -72,7 +72,7 @@ while [[ $# -gt 0 ]]; do
             log "INFO" "Running chat with input: '$1'"
             bash ./scripts/run_chat.sh "$1" || { log "ERROR" "Failed to run chat with input: '$1'"; exit 1; }
             ;;
-        --searchopen|-so|--search|-s|--fullsearch|-sso)
+        --search|-s|--fullsearch|-fs)
             shift
             log "INFO" "Running search with option: '$key' and query: '$1'"
             bash ./scripts/run_search.sh "$key" "$1" || { log "ERROR" "Failed to run search with option: '$key' and query: '$1'"; exit 1; }
