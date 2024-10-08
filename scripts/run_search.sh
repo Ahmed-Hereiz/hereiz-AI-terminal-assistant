@@ -17,7 +17,7 @@ while [[ $# -gt 0 ]]; do
             input_text="$1"
             ;;
         --fullsearch|-fs)
-            sso=true
+            fs=true
             shift
             input_text="$1"
             ;;
