@@ -1,4 +1,5 @@
 import os
+from colorama import Fore, Style
 from utils import get_arguments_fullsearch, add_root_to_path
 from customAgents.agent_llm import SimpleStreamLLM, SimpleInvokeLLM
 from customAgents.agent_prompt import SimplePrompt, PlaceHoldersPrompt, ReActPrompt
@@ -95,8 +96,11 @@ def handle_fullsearch():
     summary_prompt = ReActPrompt(question=args.fullsearch,prompt_string=args.fullsearch)
     summary_agent = ReActRuntime(llm=summary_llm,prompt=summary_prompt,toolkit=[])
 
+    print(Fore.LIGHTGREEN_EX)
     env = SequentialEnv(env_items=[query_agent,tool_exec,summary_agent])
-    env.run(initial_input=args.fullsearch)
+    output = env.run(initial_input=args.fullsearch)
+    print(Style.RESET_ALL)
+    print(Fore.LIGHTCYAN_EX+output+Style.RESET_ALL)
 
     with open('tmp.txt','r') as f:
         source_links = f.read()
