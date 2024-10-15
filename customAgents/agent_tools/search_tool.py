@@ -2,21 +2,23 @@ import requests
 import random
 from bs4 import BeautifulSoup # type: ignore
 from typing import Any
-from customAgents.agent_tools import ScrapeLinkTool
+from customAgents.agent_tools import ScrapeStaticLinkTool
 
 
-class SearchTool(ScrapeLinkTool):
+class SearchTool(ScrapeStaticLinkTool):
     def __init__(
             self,
             description: str = "Tool used to search the internet",
             tool_name: str = None,
             max_num_chars: int = 5000,
             num_top_results: int = 1,
-            get_content_only: bool = True
+            get_content_only: bool = True,
+            save_last_search_links_path: str = None
             ):
         
         self.num_top_results = num_top_results
         self.get_content_only = get_content_only
+        self.save_last_search_links_path = save_last_search_links_path
         self.user_agents = [
                     "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
                     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -44,6 +46,14 @@ class SearchTool(ScrapeLinkTool):
         search_results = self._make_search(query=query)
         summarized_results = []
         full_text_content = ''
+
+        if self.save_last_search_links_path is not None:
+            search_results_txt = 'Search Results : \n\n'
+            for result in search_results[:self.num_top_results]:
+                search_results_txt += f"Link: {result['link']}\n\n"
+
+            with open(self.save_last_search_links_path,'w') as f:
+                f.write(search_results_txt)
         
         for result in search_results[:self.num_top_results]:  
             content = self._fetch_url_content(url=result["link"])

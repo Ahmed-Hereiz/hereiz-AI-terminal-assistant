@@ -1,13 +1,14 @@
 import json
+from typing import Union
 from customAgents.agent_runtime.type_utils import agent_runtime_type
-from customAgents.agent_llm import BaseLLM
+from customAgents.agent_llm import BaseLLM, BaseMultiModal
 from customAgents.agent_prompt import BasePrompt
 from customAgents.agent_tools import ToolKit
 
 
 @agent_runtime_type
 class BaseRuntime:
-    def __init__(self, llm: BaseLLM, prompt: BasePrompt, toolkit: ToolKit):
+    def __init__(self, llm: Union[BaseLLM, BaseMultiModal], prompt: BasePrompt, toolkit: ToolKit):
         """
         Initializes the BaseRuntime with the given LLM, prompt, and tools.
 
@@ -29,8 +30,12 @@ class BaseRuntime:
         """
         if not self.llm or not self.prompt:
             raise ValueError("LLM or agent prompt is not properly initialized.")
-        response = self.llm.llm_generate(input=self.prompt.prompt)
-        return response
+        if isinstance(self.llm, BaseLLM):
+            response = self.llm.llm_generate(input=self.prompt.prompt)
+            return response
+        elif isinstance(self.llm, BaseMultiModal):
+            response = self.llm.multimodal_generate(prompt=self.prompt.prompt,img=self.prompt.img)
+            return response
 
 
     def loop(self, n_steps: int = 1) -> str:

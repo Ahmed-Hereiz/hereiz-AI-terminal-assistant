@@ -1,4 +1,5 @@
 from typing import Any
+from colorama import Fore, Style
 from customAgents.agent_llm.type_utils import agent_llm_type
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
@@ -94,11 +95,12 @@ class BaseLLM:
         return None
 
 
-    def generate_response(self, input: str) -> str:
+    def generate_response(self, input: str, output_style: str = 'default') -> str:
         """
         Generates a response from the chain using the given input.
 
         :param input: The input string to generate a response for.
+        :param output_style: style the color of the response (can be one of this : 'default', 'green', 'blue', 'yellow', 'cyan', 'red', 'magenta').
         :raises ValueError: If the llm chain is not initialized.
         :return: The generated response as a string.
         """
@@ -108,7 +110,8 @@ class BaseLLM:
 
         chunks = []
         for chunk in self._chain.stream(input=input):
-            print(chunk, end='', flush=True)
+            if output_style is not None:
+                self._print_colorized_output(chunk=chunk,output_style=output_style)
             chunks.append(chunk)
         return ''.join(chunks)
 
@@ -136,6 +139,37 @@ class BaseLLM:
         """
 
         return self.invoke_response(input=input)
+    
+
+    def _print_colorized_output(self, chunk: str, output_style: str) -> None:
+        """
+        method for customizing output color
+
+        :param chunk: the output that needs to be printed.
+        :param output_style: the color of the output.
+        """
+
+        allowed_styles = ['default', 'green', 'blue', 'yellow', 'cyan', 'red', 'magenta']
+
+        if output_style not in allowed_styles:
+            raise ValueError(f"Invalid output style. Choose from {allowed_styles}")
+
+        if output_style == "default":
+            print(chunk, end='', flush=True)
+        elif output_style == "green":
+            print(Fore.LIGHTGREEN_EX + chunk + Style.RESET_ALL, end='', flush=True)
+        elif output_style == "blue":
+            print(Fore.LIGHTBLUE_EX + chunk + Style.RESET_ALL, end='', flush=True)
+        elif output_style == "yellow":
+            print(Fore.LIGHTYELLOW_EX + chunk + Style.RESET_ALL, end='', flush=True)
+        elif output_style == "cyan":
+            print(Fore.LIGHTCYAN_EX + chunk + Style.RESET_ALL, end='', flush=True)
+        elif output_style == "red":
+            print(Fore.LIGHTRED_EX + chunk + Style.RESET_ALL, end='', flush=True)
+        elif output_style == "magenta":
+            print(Fore.LIGHTMAGENTA_EX + chunk + Style.RESET_ALL, end='', flush=True)
+
+        return None        
 
 
     def __repr__(self) -> str:
@@ -193,5 +227,9 @@ class BaseLLM:
         """
 
         return self._chain
+    
+    @property
+    def available_text_colors(self):
+        return ['default', 'green', 'blue', 'yellow', 'cyan', 'red', 'magenta']
     
     

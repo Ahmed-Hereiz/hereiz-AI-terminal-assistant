@@ -1,9 +1,10 @@
+from PIL import Image
 from customAgents.agent_prompt.type_utils import agent_prompt_type
 
 
 @agent_prompt_type
 class BasePrompt:
-    def __init__(self, prompt_string: str = ""):
+    def __init__(self, prompt_string: str = "", img = None):
         """
         Initializes the BasePrompt with the given template file and prompt string.
 
@@ -12,7 +13,8 @@ class BasePrompt:
 
         self.prompt_string = prompt_string
         self.prompt = self._generate_prompt()
-
+        self.img = img
+        
 
     def _generate_prompt(self):
         """

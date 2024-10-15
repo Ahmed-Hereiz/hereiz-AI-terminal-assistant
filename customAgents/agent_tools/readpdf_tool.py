@@ -1,12 +1,22 @@
-from typing import Any
+import re
 import PyPDF2
 from customAgents.agent_tools import BaseTool
 
 
 class PDFDocReaderTool(BaseTool):
+    def __init__(
+            self,
+            description: str = "Tool used to read data in pdf",
+            tool_name: str = None,
+            ):
+        
+        super().__init__(description, tool_name)
+    
+    
     def execute_func(self, pdf_path) -> str:
         
         text = ""
+        pdf_path = self._clean_path(pdf_path)
         with open(pdf_path, "rb") as file:
             reader = PyPDF2.PdfReader(file)
             num_pages = len(reader.pages)
@@ -16,13 +26,6 @@ class PDFDocReaderTool(BaseTool):
         return text 
     
 
-
-class PDFDocReaderSaverTool(PDFDocReaderTool):
-    def execute_func(self, pdf_path, md_path) -> str:
-        text = super().execute_func(pdf_path)
-
-        with open(md_path, "w") as file:
-            file.write("# PDF Content \n\n")
-            file.write(text)
-
-        print(f"Content Saved to {md_path}")
+    def _clean_path(self, text: str) -> str:
+        cleaned_text = re.sub(r'(?<=\.pdf)\n', '', text)
+        return cleaned_text

@@ -28,7 +28,7 @@ Action Input: [Python list of for the action (you make one action Input each ite
 
 CRITICAL RULES:
 1. You operate in a loop. Each iteration, you provide ONLY Thought, Action, and Action Input.
-2. DO NOT generate "Observation" text. Observations will be provided to you after each action.
+2. DO NOT generate "Observation" text. Observations will be provided to you after each action (DON't EVER GENERTE OBESERVATION JUST USE IT).
 3. After each observation, start a new iteration with a new Thought.
 4. Use ONLY information from observations. Do not use external knowledge or assumptions.
 5. You may need multiple iterations to gather enough information. Be patient and thorough.

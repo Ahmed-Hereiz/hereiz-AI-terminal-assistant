@@ -77,3 +77,12 @@ class ToolKit:
         :return: A string representation of the ToolKit instance.
         """
         return f"ToolKit with tools: {self.tool_names}"
+    
+
+    def __len__(self) -> int:
+        """
+        Returns the number of tools in the toolkit.
+
+        :return: The number of tools.
+        """
+        return len(self.tools)
