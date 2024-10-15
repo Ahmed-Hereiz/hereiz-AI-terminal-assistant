@@ -57,4 +57,4 @@ search_tool = SearchTool(description="tool that can search internet (each query 
 toolkit = ToolKit(tools=[search_tool])
 agent = ReActRuntime(llm=llm,prompt=prompt,toolkit=toolkit)
 
-print(agent.loop(agent_max_steps=30))
+print(agent.loop(agent_max_steps=30,verbose_tools=True))
