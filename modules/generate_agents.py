@@ -1,8 +1,8 @@
 from gradio_client import Client
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import ReActPrompt
-from customAgents.agent_runtime import ReActRuntime
-from customAgents.agent_models import GradioClientModels
+from customAgents.runtime import ReActRuntime
+from customAgents.ml_models import GradioClientModels
 from customAgents.agent_tools import ToolKit, ModelInferenceTool
 
 from helpers import save_imgs, show_images_side_by_side, sketch_window
@@ -84,6 +84,8 @@ NEVER FORGET : the action input to the tool is a plain string with no '' or list
 class GenerativeAIAgent(ReActRuntime):
     def __init__(self, llm, prompt):
 
+        txt2img_model = txt2imgModel(saved_imgs_dir="imgs")
+        print(txt2img_model)
         txt2img_tool = ModelInferenceTool(description="tool used to use text to image model (take input as single text prompt without list or '' in between) Note once the tool finish generation you will get message of where the output is found you have to tell the user the where the output dir is and stop also if you didn't get any output from the tool confirming it genrated rerun the tool some times if still no output clarify that there is problem with the tool",tool_name="text_to_image_tool",model=txt2imgModel(saved_imgs_dir="imgs"))
         sketch2img_tool = ModelInferenceTool(description="This tool is designed to convert a user’s sketch and prompt into a refined image. When the user expresses the intent to create a sketch, the tool will take a single input: a clear and detailed text prompt describing the desired modifications or enhancements to the sketch. The prompt should be provided as plain text (not using quotes or an input list). Once the image generation is complete, the tool will return the directory where the final image, refined from the user’s sketch, is saved.",tool_name="sketch_to_image_tool",model=sketch2imgModel(saved_imgs_dir="sketchimgs"))
         toolKit = ToolKit(tools=[txt2img_tool,sketch2img_tool])
