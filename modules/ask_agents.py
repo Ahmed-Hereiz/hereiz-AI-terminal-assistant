@@ -1,6 +1,6 @@
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import BasePrompt
-from customAgents.agent_runtime import HumanLoopRuntime
+from customAgents.runtime import HumanLoopRuntime
 
 
 class AskLLM(BaseLLM):
