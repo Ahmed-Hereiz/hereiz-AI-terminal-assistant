@@ -1,7 +1,7 @@
 import warnings
 from typing import Dict
 from colorama import Fore, Style
-from customAgents.agent_runtime import BaseRuntime
+from customAgents.runtime import BaseRuntime
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import BasePrompt
 from customAgents.agent_tools import ToolKit

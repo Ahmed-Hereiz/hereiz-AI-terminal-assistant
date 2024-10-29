@@ -1,111 +1,154 @@
 from colorama import Fore, Style
-from typing import Any
+from typing import Any, List, Union
 from PIL import Image
-from customAgents.agent_llm.type_utils import agent_multimodal_type
-import google.generativeai as genai
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain.schema import HumanMessage, AIMessage
+import io
+import base64
+import warnings
 
+warnings.filterwarnings("ignore")
 
-@agent_multimodal_type
 class BaseMultiModal:
     def __init__(
             self,
             api_key: str,
             model: str,
-            temperature: float,
-            safety_settings: Any = None
+            temperature: float = 0.7,
+            safety_settings: Any = None,
+            max_output_tokens: int = None
         ):
         
         self._api_key = api_key
         self._model = model
         self._temperature = temperature
         self._safety_settings = safety_settings
+        self._max_output_tokens = max_output_tokens
         self._multi_modal = self._initialize_multimodal()
 
-
     def _initialize_multimodal(self):
-        if self._model.startswith("gemini"): # Google models
-            genai.configure(
-                api_key=self._api_key,
-                transport="rest"
+        if self._model.startswith("gemini"):  # Google models
+            return ChatGoogleGenerativeAI(
+                model=self._model,
+                google_api_key=self._api_key,
+                temperature=self._temperature,
+                max_output_tokens=self._max_output_tokens,
+                convert_system_message_to_human=True
             )
-            return genai.GenerativeModel(
-                model_name=self._model,
-                safety_settings=self._safety_settings
+        elif self._model.startswith("gpt"):  # OpenAI models
+            return ChatOpenAI(
+                model=self._model,
+                openai_api_key=self._api_key,
+                temperature=self._temperature,
+                max_tokens=self._max_output_tokens
+            )
+        elif self._model.startswith("claude"):  # Anthropic models
+            return ChatAnthropic(
+                model=self._model,
+                anthropic_api_key=self._api_key,
+                temperature=self._temperature,
+                max_tokens_to_sample=self._max_output_tokens
             )
         else:
-            self._multi_modal = None
-            raise ValueError('Model not supported. currently supported models is gemini')
+            raise ValueError('Model not supported. Currently supported models: gemini, gpt, claude')
 
+    def multimodal_generate(self, prompt: str, image: Union[Image.Image, None] = None, stream: bool = False, output_style: str = 'default') -> str:
 
-    def multimodal_generate(self, prompt: str, img: Image, stream: bool=False, output_style: str='default'):
+        content = [{"type": "text", "text": prompt}]
         
-        response = self._multi_modal.generate_content([prompt, img], stream=stream)
-        
+        if image:
+            buffered = io.BytesIO()
+            image.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+            img_data = {
+                "type": "image_url",
+                "image_url": f"data:image/png;base64,{img_str}"
+            }
+            content.append(img_data)
+
+        multimodal_message = HumanMessage(content=content)
+
         if stream:
-            chunks = []
-            for chunk in response:
-                if output_style is not None:
-                    self._print_colorized_output(chunk=chunk.text,output_style=output_style)
-                chunks.append(chunk.text) 
-            return ''.join(chunks)
-        
+            response_generator = self._multi_modal.stream([multimodal_message])
+            full_response = ""
+            for chunk in response_generator:
+                chunk_text = chunk.content
+                full_response += chunk_text
+                if output_style != 'default':
+                    self._print_colorized_output(chunk=chunk_text, output_style=output_style)
+                else:
+                    print(chunk_text, end="", flush=True)
+            return full_response
         else:
-            response.resolve()
-            return response.text
-
+            response = self._multi_modal.invoke([multimodal_message])
+            if isinstance(response, AIMessage):
+                response_text = response.content
+            else:
+                response_text = str(response)
+            
+            if output_style != 'default':
+                self._print_colorized_output(chunk=response_text, output_style=output_style)
+            return response_text
 
 
     def _print_colorized_output(self, chunk: str, output_style: str) -> None:
         """
-        method for customizing output color
+        Method for customizing output color
 
         :param chunk: the output that needs to be printed.
         :param output_style: the color of the output.
         """
-
-        allowed_styles = ['default', 'green', 'blue', 'yellow', 'cyan', 'red', 'magenta']
+        allowed_styles = self.available_text_colors
 
         if output_style not in allowed_styles:
             raise ValueError(f"Invalid output style. Choose from {allowed_styles}")
 
-        if output_style == "default":
-            print(chunk, end='', flush=True)
-        elif output_style == "green":
-            print(Fore.LIGHTGREEN_EX + chunk + Style.RESET_ALL, end='', flush=True)
-        elif output_style == "blue":
-            print(Fore.LIGHTBLUE_EX + chunk + Style.RESET_ALL, end='', flush=True)
-        elif output_style == "yellow":
-            print(Fore.LIGHTYELLOW_EX + chunk + Style.RESET_ALL, end='', flush=True)
-        elif output_style == "cyan":
-            print(Fore.LIGHTCYAN_EX + chunk + Style.RESET_ALL, end='', flush=True)
-        elif output_style == "red":
-            print(Fore.LIGHTRED_EX + chunk + Style.RESET_ALL, end='', flush=True)
-        elif output_style == "magenta":
-            print(Fore.LIGHTMAGENTA_EX + chunk + Style.RESET_ALL, end='', flush=True)
+        color_map = {
+            "default": "",
+            "green": Fore.LIGHTGREEN_EX,
+            "blue": Fore.LIGHTBLUE_EX,
+            "yellow": Fore.LIGHTYELLOW_EX,
+            "cyan": Fore.LIGHTCYAN_EX,
+            "red": Fore.LIGHTRED_EX,
+            "magenta": Fore.LIGHTMAGENTA_EX
+        }
 
-        return None
-
+        print(f"{color_map[output_style]}{chunk}{Style.RESET_ALL}", end='', flush=True)
 
     def __str__(self) -> str:
-    
         multimodal_initialized = self._multi_modal is not None
-
-        return f"Model used: {self.model}, wth temperature: {self._temperature}, multimodal initialized: {multimodal_initialized}"
-
-
-    def __str__(self) -> str:
-    
-        multimodal_initialized = self._multi_modal is not None
-
-        return f"Model used: {self._model}, wth temperature: {self._temperature}, multimodal initialized: {multimodal_initialized}"
-
+        return f"Model used: {self._model}, with temperature: {self._temperature}, multimodal initialized: {multimodal_initialized}"
 
     @property
     def multimodal(self) -> Any:
-        
         return self._multi_modal
-    
 
     @property
-    def available_text_colors(self):
+    def available_text_colors(self) -> List[str]:
         return ['default', 'green', 'blue', 'yellow', 'cyan', 'red', 'magenta']
+
+    def set_temperature(self, temperature: float) -> None:
+        """
+        Set a new temperature for the model.
+
+        :param temperature: The new temperature value (0.0 to 1.0).
+        """
+        if 0.0 <= temperature <= 1.0:
+            self._temperature = temperature
+            self._multi_modal = self._initialize_multimodal()
+        else:
+            raise ValueError("Temperature must be between 0.0 and 1.0")
+
+    def set_max_output_tokens(self, max_tokens: int) -> None:
+        """
+        Set a new maximum output token limit.
+
+        :param max_tokens: The new maximum number of output tokens.
+        """
+        if max_tokens > 0:
+            self._max_output_tokens = max_tokens
+            self._multi_modal = self._initialize_multimodal()
+        else:
+            raise ValueError("Max output tokens must be a positive integer")

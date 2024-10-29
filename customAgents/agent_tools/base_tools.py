@@ -1,14 +1,12 @@
-from typing import Any, List
-from customAgents.agent_tools.type_utils import agent_tools_type
+from typing import Any, List, Dict
 
 
-@agent_tools_type
 class BaseTool:
     def __init__(self, description: str, tool_name: str = None):
         """
         Base class for individual tools.
 
-        :param tool_name: name for the tool to be excuted in runtime with.
+        :param tool_name: name for the tool to be executed in runtime with.
         :param description: A description of the tool.
         """
         self.description = description
@@ -21,19 +19,35 @@ class BaseTool:
         :param params: Parameters to pass to the function.
         :return: The result of the function execution.
         """
-        raise NotImplementedError(f"Each tool must implement its own execute_func method.\n used params {params}")
+        raise NotImplementedError(f"Each tool must implement its own execute_func method.\nUsed params: {params}")
 
 
 class ToolKit:
-    def __init__(self, tools: List[BaseTool] = []):
+    def __init__(self, tools: List[BaseTool] = None):
         """
         Initializes the ToolKit with the given tools.
 
         :param tools: A list of tool objects. Each tool must have 'execute_func', 'tool_name', and 'description'.
         """
-        self.tools = {tool.tool_name: tool for tool in tools}
-        self.tool_names = [tool.tool_name for tool in tools]
-        self.tool_descriptions = {tool.tool_name: tool.description for tool in tools}
+        self.tools: Dict[str, BaseTool] = {}
+        self.tool_names: List[str] = []
+        self.tool_descriptions: Dict[str, str] = {}
+        
+        if tools:
+            for tool in tools:
+                self.add_tool(tool)
+        
+        self.tool_instructions = self._format_tool_instructions()
+
+    def add_tool(self, tool: BaseTool) -> None:
+        """
+        Adds a new tool to the toolkit.
+
+        :param tool: The BaseTool object to add.
+        """
+        self.tools[tool.tool_name] = tool
+        self.tool_names.append(tool.tool_name)
+        self.tool_descriptions[tool.tool_name] = tool.description
         self.tool_instructions = self._format_tool_instructions()
 
     def _format_tool_instructions(self) -> str:
@@ -42,10 +56,7 @@ class ToolKit:
 
         :return: A formatted string with function names and descriptions.
         """
-        instructions = ""
-        for name, description in self.tool_descriptions.items():
-            instructions += f"({name}): {description}\n"
-        return instructions
+        return "\n".join(f"({name}): {description}" for name, description in self.tool_descriptions.items())
 
     def execute_tool(self, tool_name: str, *params: Any) -> Any:
         """
@@ -57,8 +68,7 @@ class ToolKit:
         :raises ValueError: If the tool is not found in the toolkit.
         """
         if tool_name in self.tools:
-            tool = self.tools[tool_name]
-            return tool.execute_func(*params)
+            return self.tools[tool_name].execute_func(*params)
         else:
             raise ValueError(f"Tool '{tool_name}' is not found in the toolkit.")
 
@@ -76,8 +86,7 @@ class ToolKit:
 
         :return: A string representation of the ToolKit instance.
         """
-        return f"ToolKit with tools: {self.tool_names}"
-    
+        return f"ToolKit with tools: {', '.join(self.tool_names)}"
 
     def __len__(self) -> int:
         """

@@ -1,4 +1,4 @@
-from customAgents.agent_models import BaseModels
+from customAgents.ml_models import BaseModels
 from customAgents.agent_tools import BaseTool
 
 

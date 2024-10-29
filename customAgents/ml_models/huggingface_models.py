@@ -4,7 +4,7 @@ import requests
 import numpy as  np
 from PIL import Image
 from io import BytesIO
-from customAgents.agent_models import BaseModels
+from customAgents.ml_models import BaseModels
 
 
 class HFModels(BaseModels):

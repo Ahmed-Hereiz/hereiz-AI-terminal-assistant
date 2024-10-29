@@ -1,4 +1,4 @@
-from customAgents.agent_runtime import BaseRuntime
+from customAgents.runtime import BaseRuntime
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import BasePrompt
 

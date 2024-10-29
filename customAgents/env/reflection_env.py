@@ -1,4 +1,4 @@
-from customAgents.agent_env import BaseEnv
+from customAgents.env import BaseEnv
 
 class ReflectionEnv(BaseEnv):
     def __init__(self, agents):
