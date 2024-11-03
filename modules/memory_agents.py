@@ -1,7 +1,9 @@
-from customAgents.agent_llm import BaseLLM
+from customAgents.agent_llm import BaseLLM, BaseMultiModal
 from customAgents.agent_prompt import BasePrompt
-from customAgents.agent_runtime import BaseRuntime
-from customAgents.agent_env import BaseEnv
+from customAgents.runtime import BaseRuntime
+from customAgents.env import BaseEnv
+from customAgents.agent_tools import BashRuntimeTool
+import os
 
 
 class MemoryLLM(BaseLLM):
@@ -83,3 +85,68 @@ class MemoryReflectionEnv(BaseEnv):
         new_memory = memory_agent.loop()
 
         return chat_response, new_memory
+    
+
+class ScreenMemoryLLM(BaseMultiModal):
+    def __init__(self, api_key: str, model: str, temperature: float, safety_settings=None):
+        super().__init__(api_key, model, temperature, safety_settings)
+
+    def multimodal_generate(self, prompt, img, stream=True):
+        return super().multimodal_generate(prompt, img, stream, output_style="visual")
+
+class ScreenMemoryPrompt(BasePrompt):
+    def __init__(self, user_question, img, memory):
+        super().__init__(prompt_string="", img=img)
+        self.prompt = """
+You are Hereiz, a friendly and helpful AI assistant. Your role is to chat with users, provide assistance, and offer thoughtful, personalized support. You are skilled in multiple areas, including programming, data science, machine learning, science, and math.
+
+**Current Context:**
+- You can see what the user is currently doing, which may provide important context for their query.
+- Based on the current response, suggest next steps or actions that could help the user.
+
+Current Context:
+{memory}
+
+Current Conversation:
+
+user query : {user_question}
+query response : {answer}
+
+"""
+        self.prompt = self.prompt.replace("{memory}", memory)
+        self.prompt = self.prompt.replace("{user_question}", user_question)
+
+class ScreenMemoryAgent(BaseRuntime):
+    def __init__(self, llm: ScreenMemoryLLM, prompt: ScreenMemoryPrompt):
+        super().__init__(llm, prompt, toolkit=[])
+
+    def step(self) -> str:
+        return super().step()
+    
+    def loop(self, n_steps: int = 1) -> str:
+        return super().loop(n_steps)
+
+
+class ScreenMemorySeqEnv(BaseEnv):
+    def __init__(self, agents):
+        if len(agents) != 2:
+            raise ValueError("Memory Agent class must be initialized with exactly 2 agents.")
+        super().__init__(agents=agents,routers=None)
+
+    def run(self):
+        screen_agent = self.agents[0]
+        memory_screen_agent = self.agents[1]
+
+        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+
+        get_screen = BashRuntimeTool()
+        cap_screen_file = f"{root_dir}/hereiz_screen.sh"
+        output_screen_dir = f"{root_dir}/data/tmp/"
+
+        get_screen.execute_func(code=f"bash {cap_screen_file} {output_screen_dir}")
+        
+        screen_response = screen_agent.loop()
+        memory_screen_agent.prompt.prompt = memory_screen_agent.prompt.prompt.replace("{answer}",screen_response)
+        new_memory = memory_screen_agent.loop()
+
+        return screen_response, new_memory
