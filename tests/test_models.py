@@ -1,4 +1,4 @@
-from customAgents.agent_models import GradioClientModels
+from customAgents.ml_models import GradioClientModels
 from customAgents.agent_tools import ModelInferenceTool
 
 

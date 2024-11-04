@@ -4,9 +4,8 @@ from customAgents.agent_tools import ToolKit, SearchTool, PythonRuntimeTool
 from customAgents.agent_runtime import ReActRuntime
 
 
-from common.utils import load_config, parse_safety_settings
+from common.utils import load_config
 config = load_config(f"../config/llm.json")
-safety_settings = parse_safety_settings(config['safety_settings'])
 
 
 example_workflow = """
@@ -50,7 +49,7 @@ Final Answer: the product of 22 * 33 is 726 [if there is more to describe to mak
 """
 
 question = input("Enter you question : ")
-llm = SimpleStreamLLM(api_key=config['api_key'],model='gemini-1.5-flash',temperature=0.7,safety_settings=safety_settings)
+llm = SimpleStreamLLM(api_key=config['api_key'],model='gemini-1.5-flash',temperature=0.7)
 prompt = ReActPrompt(question=question, example_workflow=example_workflow)
 python_tool = PythonRuntimeTool(description="tool that can run python code (give the code for this function as md format)",tool_name="python_tool")
 search_tool = SearchTool(description="tool that can search internet (each query you input will get different search)",tool_name="search_tool")
