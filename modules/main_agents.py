@@ -25,7 +25,7 @@ class MainPrompt(ReActPrompt):
 
         self.memory = memory
 
-        super().__init__(question, example_workflow="", prompt_string="")
+        super().__init__(question)
 
         self.example_workflow = """
 Question: What is the date today ?
