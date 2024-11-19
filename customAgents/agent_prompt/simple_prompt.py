@@ -17,4 +17,3 @@ class SimplePrompt(BasePrompt):
         :param audio: An optional audio file path to be associated with the prompt or a pydub AudioSegment.
         """
         super().__init__(text, image)
-        self.prompt = self.construct_prompt()

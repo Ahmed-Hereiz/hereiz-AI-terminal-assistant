@@ -60,9 +60,6 @@ Question: {query}
         if self.image:
             self.prepend_to_prompt("An image is provided with this prompt. Consider using visual analysis tools if they might be relevant to the task.")
 
-        if self.audio:
-            self.prepend_to_prompt("An audio file is provided with this prompt. Consider using audio analysis tools if they might be relevant to the task.")
-
         return self.prompt
 
     def set_tools(self, tools: str, tool_names: str):
