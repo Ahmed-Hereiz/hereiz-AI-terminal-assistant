@@ -21,7 +21,7 @@ usage() {
     echo "  -G,  --generate                            used to generate content using generative AI models "
     echo "  -t  'template_name'                        Show txt inside a specific template file 'template_name'"
     echo "  -tl                                        Show list of templates found"
-    echo "  -w, --screen                                  give access to screen through screenshots "
+    echo "  -w, --screen                               give access to screen through screenshots "
     echo "  -memshow, --memory_show 'memory_name'      Show Chat model memory"
     echo "  -memclr, --memory_clear 'memory_name'      Clear Chat model memory"
     echo "  -memlst, --memory_list                     show list of memory files found" 
