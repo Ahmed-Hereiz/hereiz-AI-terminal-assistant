@@ -13,8 +13,8 @@ class ScreenLMM(BaseMultiModal):
     
 
 class ScreenPrompt(BasePrompt):
-    def __init__(self, img, user_question, memory):
-        super().__init__(prompt_string="", img=img)
+    def __init__(self, img, user_question, memory=None):
+        super().__init__(text="", image=img)
 
         self.prompt = """
 You are Hereiz, a friendly and helpful AI assistant. Your role is to chat with users, provide assistance, and offer thoughtful, personalized support. You are skilled in multiple areas, including programming, data science, machine learning, science, and math.
@@ -44,7 +44,10 @@ Current Context:
 Human: {input}
 Hereiz:
 """
-        self.prompt = self.prompt.replace("{memory}", memory)
+        if memory is not None:
+            self.prompt = self.prompt.replace("{memory}", memory)
+        else:
+            self.prompt = self.prompt.replace("{memory}", "")
         self.prompt = self.prompt.replace("{input}", user_question)
 
 
