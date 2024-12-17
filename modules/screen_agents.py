@@ -13,7 +13,7 @@ class ScreenLMM(BaseMultiModal):
     
 
 class ScreenPrompt(BasePrompt):
-    def __init__(self, img, user_question, memory=None):
+    def __init__(self, img, user_question, memory=""):
         super().__init__(text="", image=img)
 
         self.prompt = """
@@ -44,10 +44,7 @@ Current Context:
 Human: {input}
 Hereiz:
 """
-        if memory is not None:
-            self.prompt = self.prompt.replace("{memory}", memory)
-        else:
-            self.prompt = self.prompt.replace("{memory}", "")
+        self.prompt = self.prompt.replace("{memory}", memory)
         self.prompt = self.prompt.replace("{input}", user_question)
 
 
