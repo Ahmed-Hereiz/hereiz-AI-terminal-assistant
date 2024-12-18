@@ -56,6 +56,6 @@ class ScreenAgent(BaseRuntime):
         return super().step()
     
     def loop(self, activate_loop=True) -> str:
-        return super().loop(activate_loop)
+        return super().loop(activate_loop=activate_loop)
     
 
