@@ -50,4 +50,4 @@ def continue_screen_chat():
             screen_prompt = ScreenPrompt(user_question=new_query,img=img)
             screen_agent = ScreenAgent(llm=screen_lmm,prompt=screen_prompt)
 
-            agent_response = screen_agent.loop()
+            screen_agent.loop()
