@@ -32,10 +32,10 @@ class BaseRuntime:
             response = self.llm.llm_generate(input=self.prompt.prompt)
             return response
         elif isinstance(self.llm, BaseMultiModal):
-            if self.prompt.img is None:
+            if self.prompt.image is None:
                 response = self.llm.multimodal_generate(prompt=self.prompt.prompt)
             else:
-                response = self.llm.multimodal_generate(prompt=self.prompt.prompt,img=self.prompt.img)
+                response = self.llm.multimodal_generate(prompt=self.prompt.prompt,img=self.prompt.image)
             return response
 
 
