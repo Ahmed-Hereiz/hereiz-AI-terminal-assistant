@@ -33,7 +33,7 @@ def hande_screen():
 def continue_screen_chat():
 
     while True:
-        new_query = input("\n\nEnter feedback (or 'exit' to end loop): ")
+        new_query = input("\n\n Enter a new query (or 'exit' to end loop): ")
 
         if new_query.lower() == "exit":
             break
