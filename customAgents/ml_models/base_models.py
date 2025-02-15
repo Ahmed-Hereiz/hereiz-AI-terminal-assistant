@@ -54,3 +54,54 @@ class BaseModels(ABC):
 
     def __repr__(self) -> str:
         return self.__str__()
+    
+    def get_model_info(self) -> Dict[str, Any]:
+        """
+        Get information about the model.
+        
+        Returns:
+            Dict containing model type, parameters and other metadata
+        """
+        return {
+            "model_type": self.model_type,
+            "model_params": self.model_params,
+            "model_loaded": self.model is not None
+        }
+
+    def reset(self) -> None:
+        """
+        Reset the model to initial state.
+        """
+        self.model = None
+
+    def validate_input(self, input_data: Any) -> bool:
+        """
+        Validate that input data meets model requirements.
+        
+        Args:
+            input_data: Input data to validate
+
+        Returns:
+            bool indicating if input is valid
+        """
+        return True
+
+    def save_model(self, path: str) -> None:
+        """
+        Save the model to disk.
+        
+        Args:
+            path: Path to save model
+        """
+        raise NotImplementedError("save_model() not implemented for base class")
+
+    def get_model_parameters(self) -> Dict[str, Any]:
+        """
+        Get the model's parameters.
+        
+        Returns:
+            Dict of parameter names and values
+        """
+        if self.model is None:
+            return {}
+        return self.model_params or {}

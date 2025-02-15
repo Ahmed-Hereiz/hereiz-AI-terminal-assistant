@@ -92,7 +92,6 @@ class BaseMultiModal:
                 self._print_colorized_output(chunk=response_text, output_style=output_style)
             return response_text
 
-
     def _print_colorized_output(self, chunk: str, output_style: str) -> None:
         """
         Method for customizing output color
@@ -152,3 +151,24 @@ class BaseMultiModal:
             self._multi_modal = self._initialize_multimodal()
         else:
             raise ValueError("Max output tokens must be a positive integer")
+
+    def reset_model(self) -> None:
+        """
+        Resets the model to its initial state.
+        """
+        self._multi_modal = self._initialize_multimodal()
+
+    def get_model_info(self) -> str:
+        """
+        Returns a string containing information about the model.
+        """
+        return f"Model: {self._model}, Temperature: {self._temperature}, Max Output Tokens: {self._max_output_tokens}"
+
+    def change_safety_settings(self, new_settings: Any) -> None:
+        """
+        Update the safety settings for the model.
+
+        :param new_settings: The new safety settings to apply.
+        """
+        self._safety_settings = new_settings
+        self._multi_modal = self._initialize_multimodal()

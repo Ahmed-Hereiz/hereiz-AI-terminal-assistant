@@ -18,7 +18,7 @@ class GradioClientModels(BaseModels):
 
         client_output = self.client.predict(
             input_prompt,
-            api_name=self.api_name
+            api_name=self.api_name,
         )
 
         return client_output

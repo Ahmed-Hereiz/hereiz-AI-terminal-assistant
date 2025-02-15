@@ -10,24 +10,24 @@ class ReActPrompt(BasePrompt):
         super().__init__(text, image)
 
 
-    def construct_prompt(self, query: str, example_workflow: str = ""):
+    def construct_prompt(self, query: str, example_workflow: str = "", memory_access: str = ""):
         self.prompt = """
 {text}
 You are an AI agent designed to answer questions through an iterative process. You have access to the following tools:
 {tools_and_role}
 
-IMPORTANT: This is an ITERATIVE PROCESS. You will go through multiple steps before reaching a final answer. Do not try to answer the question immediately.
+IMPORTANT: This is an ITERATIVE PROCESS. You will go through multiple steps before reaching a final answer. Do not try to answer the question immediately unless you are confident in your knowledge.
 
 Follow this format EXACTLY for each iteration:
 Thought: [Your reasoning about the current state and what to do next]
-Action: [One of: {tool_names}]
-Action Input: [Python list for the action (you make one action Input each iteration)]
+Action: [One of: {tool_names} or "answer from knowledge base"]
+Action Input: [Python list for the action (you make one action Input each iteration) or "N/A" if answering directly]
 
 CRITICAL RULES:
 1. You operate in a loop. Each iteration, you provide ONLY Thought, Action, and Action Input.
 2. DO NOT generate "Observation" text. Observations will be provided to you after each action (DON'T EVER GENERATE OBSERVATION, JUST USE IT).
 3. After each observation, start a new iteration with a new Thought.
-4. Use ONLY information from observations. Do not use external knowledge or assumptions.
+4. Use ONLY information from observations. Do not use external knowledge or assumptions unless you choose to answer directly.
 5. You may need multiple iterations to gather enough information. Be patient and thorough.
 6. Do NOT try to provide a final answer until you are absolutely certain you have all necessary information.
 7. You should have good reasoning ability while thinking, so if there is an indirect question, you can use math to solve for it.
@@ -45,6 +45,8 @@ Remember:
 - If an observation is unclear or insufficient, use your next action to clarify or gather more information.
 - Your goal is to be thorough and accurate, not quick. Take as many iterations as needed and use tools as much time as you need to get the best result.
 
+{memory_access}
+
 Example workflow:
 {example_workflow}
 
@@ -56,6 +58,7 @@ Question: {query}
         self.replace_placeholder("{example_workflow}", example_workflow)
         self.replace_placeholder("{text}", self.text)
         self.replace_placeholder("{query}", query)
+        self.replace_placeholder("{memory_access}", memory_access)
 
         if self.image:
             self.prepend_to_prompt("An image is provided with this prompt. Consider using visual analysis tools if they might be relevant to the task.")

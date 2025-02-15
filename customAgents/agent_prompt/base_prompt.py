@@ -142,3 +142,36 @@ class BasePrompt:
         :return: True if an image is associated, False otherwise.
         """
         return self.image is not None
+
+    def reset(self):
+        """
+        Resets the BasePrompt instance to its initial state.
+        """
+        self.clear_prompt()
+        self.image = None
+        self.text = ""
+
+    def update_text(self, new_text: str):
+        """
+        Updates the text associated with the prompt.
+
+        :param new_text: The new text to be associated with the prompt.
+        """
+        self.text = self._load_text(new_text)
+
+    def get_image(self) -> Union[Image.Image, None]:
+        """
+        Returns the current image associated with the prompt.
+
+        :return: The current image or None if no image is associated.
+        """
+        return self.image
+
+    def prompt_length(self) -> int:
+        """
+        Returns the length of the current prompt string.
+
+        :return: The length of the prompt string.
+        """
+        return len(self.prompt)
+
