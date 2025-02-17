@@ -34,7 +34,7 @@ usage() {
 if [ "$#" -eq 0 ]; then
     usage
     log "ERROR" "No options provided"
-    echo  echo "Usage: $0 [--ask|-a 'your question to model'] [--searchopen|--so 'your search query'] [--search|--s 'your search query'] [--sso 'your search query']"
+    echo  "Usage: $0 [--ask|-a 'your question to model'] [--searchopen|--so 'your search query'] [--search|--s 'your search query'] [--sso 'your search query']"
     exit 1
 elif [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     usage
